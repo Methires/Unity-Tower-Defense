@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
@@ -89,6 +88,29 @@ public class GameController : MonoBehaviour
                     }
                 } 
             }
+	    }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            if (!((_currentXYIndex[0] == 0 && _currentXYIndex[1] == _startingPoint) || (_currentXYIndex[0] == FindObjectOfType<SpawnTiles>().Lenght - 1 && _currentXYIndex[1] == _endingPoint)))
+            {
+                if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.childCount == 0)
+                {
+                    GameObject baseTower = Instantiate(Resources.Load("Prefabs/Towers/Shooting"), _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.position, Quaternion.identity) as GameObject;
+                    if (baseTower != null)
+                    {
+                        baseTower.transform.parent = _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform;
+                    }
+                }
+            }
+        }
+
+	    if (Input.GetKeyDown(KeyCode.X))
+	    {
+	        if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.childCount != 0)
+	        {
+	            Destroy(_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.GetChild(0).gameObject);
+	        }
 	    }
     }
 
