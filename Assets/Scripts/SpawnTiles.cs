@@ -8,7 +8,7 @@ public class SpawnTiles : MonoBehaviour
     public int Width;
 
     private GameObject[,] _tiles;
-	void Start ()
+	void Awake ()
     {
         _tiles = new GameObject[Lenght,Width];
 	    for (int i = 0; i < Lenght; i++)
@@ -19,9 +19,9 @@ public class SpawnTiles : MonoBehaviour
 	            tile.transform.parent = transform;
                 Vector3 position = new Vector3
                 {
-                    x = i * 1.05f,
+                    x = j * 1.05f,
                     y = 0.0f,
-                    z = j * 1.05f
+                    z = i * 1.05f
                 };
 	            tile.transform.localPosition = position;
 	            _tiles[i, j] = tile;
