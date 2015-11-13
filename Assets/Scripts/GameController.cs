@@ -3,6 +3,7 @@ using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
+    private int _resources;
     private int _startingPoint;
     private int _endingPoint;
     private int [] _currentXYIndex;
@@ -39,6 +40,7 @@ public class GameController : MonoBehaviour
 	        }
 	    }
         ChangeHighlightedTile(' ');
+        UpdateResources(1000);
 	}
 	
 	void Update ()
@@ -81,10 +83,9 @@ public class GameController : MonoBehaviour
             {
                 if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.childCount == 0)
                 {
-                    GameObject baseTower = Instantiate(Resources.Load("Prefabs/Towers/Base"), _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.position, Quaternion.identity) as GameObject;
-                    if (baseTower != null)
+                    if (_resources - 150 >= 0)
                     {
-                        baseTower.transform.parent = _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform;
+                        SpawnTower("Base", 150);
                     }
                 } 
             }
@@ -96,10 +97,9 @@ public class GameController : MonoBehaviour
             {
                 if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.childCount == 0)
                 {
-                    GameObject baseTower = Instantiate(Resources.Load("Prefabs/Towers/Shooting"), _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.position, Quaternion.identity) as GameObject;
-                    if (baseTower != null)
+                    if (_resources - 250 >= 0)
                     {
-                        baseTower.transform.parent = _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform;
+                        SpawnTower("Shooting", 250);
                     }
                 }
             }
@@ -109,7 +109,7 @@ public class GameController : MonoBehaviour
 	    {
 	        if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.childCount != 0)
 	        {
-	            Destroy(_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.GetChild(0).gameObject);
+	            DestroyTower();
 	        }
 	    }
     }
@@ -143,5 +143,35 @@ public class GameController : MonoBehaviour
         _tiles[_currentXYIndex[0],_currentXYIndex[1]].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Normal") as Material;
         _tiles[newXY[0],newXY[1]].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Highlighted") as Material;
         _currentXYIndex = newXY;
+    }
+
+    private void SpawnTower(string towerName, int towerCost)
+    {
+        GameObject baseTower = Instantiate(Resources.Load("Prefabs/Towers/" + towerName), _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.position, Quaternion.identity) as GameObject;
+        if (baseTower != null)
+        {
+            baseTower.transform.parent = _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform;
+            UpdateResources(-towerCost);
+        } 
+    }
+
+    private void DestroyTower()
+    {
+        if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.GetChild(0).gameObject.name.Contains("Base"))
+	    {
+		    UpdateResources(150);
+        }
+        else if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.GetChild(0)
+            .gameObject.name.Contains("Shooting"))
+        {
+            UpdateResources(250);
+        }
+        Destroy(_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.GetChild(0).gameObject);
+    }
+
+    public void UpdateResources(int value)
+    {
+        _resources += value;
+        GameObject.FindGameObjectWithTag("ResourcesText").GetComponent<GUIText>().text = "Resources: " + _resources;
     }
 }
