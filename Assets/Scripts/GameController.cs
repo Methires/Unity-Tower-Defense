@@ -1,51 +1,29 @@
 ﻿using UnityEngine;
-using Random = UnityEngine.Random;
+using Assets.Scripts.Pathfinding;
 
 public class GameController : MonoBehaviour
 {
     private int _resources;
     private int _startingPoint;
     private int _endingPoint;
-    private int [] _currentXYIndex;
-    private int[,] _aValues;
+    private Point _currentTile;
     private GameObject[,] _tiles;
 	void Start ()
 	{
-	    int length = FindObjectOfType<SpawnTiles>().Lenght;
-	    int width = FindObjectOfType<SpawnTiles>().Width;
-	    _startingPoint = Random.Range(0, length - 1);
-        _endingPoint = Random.Range(0, length - 1);
-	    _currentXYIndex = new[] {0, 0};
-	    _tiles = new GameObject[length,width];
+        _currentTile = new Point(0,0);
+	    _startingPoint = FindObjectOfType<PathCreation>().StartingPoint;
+	    _endingPoint = FindObjectOfType<PathCreation>().EndingPoint;
+        _tiles = new GameObject[FindObjectOfType<SpawnTiles>().Lenght, FindObjectOfType<SpawnTiles>().Width];
         _tiles = FindObjectOfType<SpawnTiles>().GetAllTiles();
-        _aValues = new int[length,width];
-	    for (int i = 0; i < length; i++)
-	    {
-	        _aValues[_startingPoint, i] = i;
-	    }
-	    for (int i = 0; i < length; i++)
-	    {
-	        for (int j = 0; j < width; j++)
-	        {
-	            if (_startingPoint + j < length)
-	            {
-	                _aValues[i, _startingPoint + j] = j + i;
-	            }
-                if (_startingPoint - j > 0)
-                {
-                    _aValues[i, _startingPoint - j] = j + i;
-                }
-	        }
-	    }
         ChangeHighlightedTile(' ');
-        UpdateResources(1000);
+        UpdateResources(100000);
 	}
 	
 	void Update ()
     {
 	    if (Input.GetKeyDown(KeyCode.W))
 	    {
-	        if (_currentXYIndex[0] < FindObjectOfType<SpawnTiles>().Lenght - 1)
+	        if (_currentTile.X < FindObjectOfType<SpawnTiles>().Lenght - 1)
 	        {
 	            ChangeHighlightedTile('W');
 	        }
@@ -53,7 +31,7 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            if (_currentXYIndex[0] > 0)
+            if (_currentTile.X > 0)
             {
                 ChangeHighlightedTile('S');
             }
@@ -61,7 +39,7 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            if (_currentXYIndex[1] > 0)
+            if (_currentTile.Y > 0)
             {
                 ChangeHighlightedTile('A');
             }
@@ -69,7 +47,7 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.D))
         {
-            if (_currentXYIndex[1] < FindObjectOfType<SpawnTiles>().Width - 1)
+            if (_currentTile.Y < FindObjectOfType<SpawnTiles>().Width - 1)
             {
                 ChangeHighlightedTile('D');
             }
@@ -77,13 +55,16 @@ public class GameController : MonoBehaviour
         
 	    if (Input.GetKeyDown(KeyCode.B))
 	    {
-            if (!((_currentXYIndex[0] == 0 && _currentXYIndex[1] == _startingPoint) || (_currentXYIndex[0] == FindObjectOfType<SpawnTiles>().Lenght - 1 && _currentXYIndex[1] == _endingPoint)))
+            if (!((_currentTile.X == 0 && _currentTile.Y == _startingPoint) || (_currentTile.X == FindObjectOfType<SpawnTiles>().Lenght - 1 && _currentTile.Y == _endingPoint)))
             {
-                if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.childCount == 0)
+                if (_tiles[_currentTile.X, _currentTile.Y].transform.childCount == 0)
                 {
                     if (_resources - 150 >= 0)
                     {
-                        SpawnTower("Base", 150);
+                        if (FindObjectOfType<PathCreation>().ViablePath(_currentTile.X,_currentTile.Y))
+                        {
+                            SpawnTower("Base", 150); 
+                        }
                     }
                 } 
             }
@@ -91,13 +72,16 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            if (!((_currentXYIndex[0] == 0 && _currentXYIndex[1] == _startingPoint) || (_currentXYIndex[0] == FindObjectOfType<SpawnTiles>().Lenght - 1 && _currentXYIndex[1] == _endingPoint)))
+            if (!((_currentTile.X == 0 && _currentTile.Y == _startingPoint) || (_currentTile.X == FindObjectOfType<SpawnTiles>().Lenght - 1 && _currentTile.Y == _endingPoint)))
             {
-                if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.childCount == 0)
+                if (_tiles[_currentTile.X, _currentTile.Y].transform.childCount == 0)
                 {
                     if (_resources - 250 >= 0)
                     {
-                        SpawnTower("Shooting", 250);
+                        if (FindObjectOfType<PathCreation>().ViablePath(_currentTile.X, _currentTile.Y))
+                        {
+                            SpawnTower("Shooting", 250);
+                        }
                     }
                 }
             }
@@ -105,7 +89,7 @@ public class GameController : MonoBehaviour
 
 	    if (Input.GetKeyDown(KeyCode.X))
 	    {
-	        if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.childCount != 0)
+	        if (_tiles[_currentTile.X, _currentTile.Y].transform.childCount != 0)
 	        {
 	            DestroyTower();
 	        }
@@ -114,62 +98,76 @@ public class GameController : MonoBehaviour
 
     private void ChangeHighlightedTile(char pressedKey)
     {
-        int[] newXY = new int[2];
         switch (pressedKey)
         {
             case 'W':
-                newXY[0] = _currentXYIndex[0] + 1;
-                newXY[1] = _currentXYIndex[1];
+                _currentTile.X = _currentTile.X + 1;
+                _currentTile.Y = _currentTile.Y;
                 break;
             case 'S':
-                newXY[0] = _currentXYIndex[0] - 1;
-                newXY[1] = _currentXYIndex[1];
+                _currentTile.X = _currentTile.X - 1;
+                _currentTile.Y = _currentTile.Y;
                 break;
             case 'A':
-                newXY[0] = _currentXYIndex[0];
-                newXY[1] = _currentXYIndex[1] - 1;
+                _currentTile.X = _currentTile.X;
+                _currentTile.Y = _currentTile.Y - 1;
                 break;
             case 'D':
-                newXY[0] = _currentXYIndex[0];
-                newXY[1] = _currentXYIndex[1] + 1;
+                _currentTile.X = _currentTile.X;
+                _currentTile.Y = _currentTile.Y + 1;
                 break;
             default:
-                newXY[0] = _currentXYIndex[0];
-                newXY[1] = _currentXYIndex[1];
+                _currentTile.X = _currentTile.X;
+                _currentTile.Y = _currentTile.Y;
                 break;
         }
-        _tiles[_currentXYIndex[0],_currentXYIndex[1]].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Normal") as Material;
-        _tiles[newXY[0],newXY[1]].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Highlighted") as Material;
-        _currentXYIndex = newXY;
+        ApplyMaterialOnTiles();
     }
 
     private void SpawnTower(string towerName, int towerCost)
     {
-        GameObject baseTower = Instantiate(Resources.Load("Prefabs/Towers/" + towerName), _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.position, Quaternion.identity) as GameObject;
+        GameObject baseTower = Instantiate(Resources.Load("Prefabs/Towers/" + towerName), _tiles[_currentTile.X, _currentTile.Y].transform.position, Quaternion.identity) as GameObject;
         if (baseTower != null)
         {
-            baseTower.transform.parent = _tiles[_currentXYIndex[0], _currentXYIndex[1]].transform;
+            baseTower.transform.parent = _tiles[_currentTile.X, _currentTile.Y].transform;
             UpdateResources(-towerCost);
         } 
+        ApplyMaterialOnTiles();
     }
 
     private void DestroyTower()
     {
-        if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.GetChild(0).gameObject.name.Contains("Base"))
+        if (_tiles[_currentTile.X, _currentTile.Y].transform.GetChild(0).gameObject.name.Contains("Base"))
 	    {
 		    UpdateResources(150);
         }
-        else if (_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.GetChild(0)
+        else if (_tiles[_currentTile.X, _currentTile.Y].transform.GetChild(0)
             .gameObject.name.Contains("Shooting"))
         {
             UpdateResources(250);
         }
-        Destroy(_tiles[_currentXYIndex[0], _currentXYIndex[1]].transform.GetChild(0).gameObject);
+        Destroy(_tiles[_currentTile.X, _currentTile.Y].transform.GetChild(0).gameObject);
+        FindObjectOfType<PathCreation>().ViablePath(-1, -1);
+        ApplyMaterialOnTiles();
     }
 
     public void UpdateResources(int value)
     {
         _resources += value;
         GameObject.FindGameObjectWithTag("ResourcesText").GetComponent<GUIText>().text = "Resources: " + _resources;
+    }
+
+    private void ApplyMaterialOnTiles()
+    {
+        foreach (var tile in _tiles)
+        {
+            tile.GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Normal") as Material;
+        }
+        var path = FindObjectOfType<PathCreation>().GetPath();
+        foreach (var pathPart in path)
+        {
+            pathPart.GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Path") as Material;
+        }
+        _tiles[_currentTile.X, _currentTile.Y].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Highlighted") as Material;
     }
 }

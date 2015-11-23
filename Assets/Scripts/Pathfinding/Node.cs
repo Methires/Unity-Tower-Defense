@@ -9,7 +9,6 @@ namespace Assets.Scripts.Pathfinding
             Untested,
             Open,
             Closed
-
         }
 
         private Node _parentNode;

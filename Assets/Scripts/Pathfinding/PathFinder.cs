@@ -87,15 +87,19 @@ namespace Assets.Scripts.Pathfinding
                 int y = location.Y;
 
                 if (x < 0 || x >= this._width || y < 0 || y >= this._height)
+                {
                     continue;
+                }
 
                 Node node = this._nodes[x, y];
                 if (!node.IsWalkable)
+                {
                     continue;
-
+                }
                 if (node.State == Node.NodeState.Closed)
+                {
                     continue;
-
+                }
                 if (node.State == Node.NodeState.Open)
                 {
                     float traversalCost = Node.GetTraversalCost(node.Location, node.ParentNode.Location);
