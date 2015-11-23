@@ -294,6 +294,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1432541837}
   - 114: {fileID: 1432541836}
+  - 114: {fileID: 1432541838}
   m_Layer: 0
   m_Name: Tile Spawner
   m_TagString: Untagged
@@ -327,6 +328,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!114 &1432541838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1432541835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fab15382b5bbf14479cb1f843b5d1c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1914956381
 GameObject:
   m_ObjectHideFlags: 0

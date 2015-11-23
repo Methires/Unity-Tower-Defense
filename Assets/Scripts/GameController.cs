@@ -18,8 +18,6 @@ public class GameController : MonoBehaviour
 	    _currentXYIndex = new[] {0, 0};
 	    _tiles = new GameObject[length,width];
         _tiles = FindObjectOfType<SpawnTiles>().GetAllTiles();
-	    Instantiate(Resources.Load("Prefabs/Start"), _tiles[0, _startingPoint].transform.position, Quaternion.identity);
-        Instantiate(Resources.Load("Prefabs/End"), _tiles[length - 1, _endingPoint].transform.position, Quaternion.identity);
         _aValues = new int[length,width];
 	    for (int i = 0; i < length; i++)
 	    {
