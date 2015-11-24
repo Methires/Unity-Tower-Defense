@@ -2,7 +2,7 @@
 using Assets.Scripts.Pathfinding;
 using UnityEngine;
 
-public class PathCreation : MonoBehaviour {
+public class CreatePath : MonoBehaviour {
 
     private int _length;
     private int _width;
@@ -25,7 +25,6 @@ public class PathCreation : MonoBehaviour {
         InitializeMap();
         MarkObstacles();
         FindPath();
-        ShowPath();
     }
 
     private void InitializeMap()
@@ -43,7 +42,7 @@ public class PathCreation : MonoBehaviour {
         this._searchParameters = new SearchParameters(startLocation, endLocation, _map);
     }
 
-    private void MarkObstacles(int x = -1, int y = -1)
+    private void MarkObstacles(int x = -1, int y = -1, bool delete = false)
     {
         for (int i = 0; i < _length; i++)
         {
@@ -58,7 +57,14 @@ public class PathCreation : MonoBehaviour {
 
         if (x >= 0 && y >= 0 && x<_length && y<_width)
         {
-            _map[x, y] = false;
+            if (!delete)
+            {
+                _map[x, y] = false;
+            }
+            else
+            {
+                _map[x, y] = true;
+            }
         }
     }
 
@@ -66,14 +72,6 @@ public class PathCreation : MonoBehaviour {
     {
         PathFinder pathFinder = new PathFinder(_searchParameters);
         _path = pathFinder.FindPath();
-    }
-
-    private void ShowPath()
-    {
-        foreach (var part in _path)
-        {
-            _tiles[part.X, part.Y].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Path") as Material;
-        }
     }
 
     public bool ViablePath(int x, int y)
@@ -87,14 +85,24 @@ public class PathCreation : MonoBehaviour {
         {
             _map = previousMap;
             _path = previousPath;
-            ShowPath();
             return false;
         }
         else
         {
-            ShowPath();
             return true;
         }
+    }
+
+    public bool FindPathAfterTowerRemoval(int x, int y)
+    {
+        InitializeMap();
+        MarkObstacles(x,y, true);
+        FindPath();
+        if (_path.Count != 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     public List<GameObject> GetPath()

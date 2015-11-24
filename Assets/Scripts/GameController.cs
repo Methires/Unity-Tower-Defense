@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using Assets.Scripts.Pathfinding;
 
 public class GameController : MonoBehaviour
@@ -11,8 +12,8 @@ public class GameController : MonoBehaviour
 	void Start ()
 	{
         _currentTile = new Point(0,0);
-	    _startingPoint = FindObjectOfType<PathCreation>().StartingPoint;
-	    _endingPoint = FindObjectOfType<PathCreation>().EndingPoint;
+	    _startingPoint = FindObjectOfType<CreatePath>().StartingPoint;
+	    _endingPoint = FindObjectOfType<CreatePath>().EndingPoint;
         _tiles = new GameObject[FindObjectOfType<SpawnTiles>().Lenght, FindObjectOfType<SpawnTiles>().Width];
         _tiles = FindObjectOfType<SpawnTiles>().GetAllTiles();
         ChangeHighlightedTile(' ');
@@ -21,79 +22,96 @@ public class GameController : MonoBehaviour
 	
 	void Update ()
     {
-	    if (Input.GetKeyDown(KeyCode.W))
-	    {
-	        if (_currentTile.X < FindObjectOfType<SpawnTiles>().Lenght - 1)
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                if (_currentTile.X < FindObjectOfType<SpawnTiles>().Lenght - 1)
+                {
+                    ChangeHighlightedTile('W');
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                if (_currentTile.X > 0)
+                {
+                    ChangeHighlightedTile('S');
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                if (_currentTile.Y > 0)
+                {
+                    ChangeHighlightedTile('A');
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                if (_currentTile.Y < FindObjectOfType<SpawnTiles>().Width - 1)
+                {
+                    ChangeHighlightedTile('D');
+                }
+            }
+
+	        if (Input.GetKeyDown(KeyCode.Alpha1))
 	        {
-	            ChangeHighlightedTile('W');
-	        }
-	    }
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            if (_currentTile.X > 0)
-            {
-                ChangeHighlightedTile('S');
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            if (_currentTile.Y > 0)
-            {
-                ChangeHighlightedTile('A');
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            if (_currentTile.Y < FindObjectOfType<SpawnTiles>().Width - 1)
-            {
-                ChangeHighlightedTile('D');
-            }
-        }
-        
-	    if (Input.GetKeyDown(KeyCode.B))
-	    {
-            if (!((_currentTile.X == 0 && _currentTile.Y == _startingPoint) || (_currentTile.X == FindObjectOfType<SpawnTiles>().Lenght - 1 && _currentTile.Y == _endingPoint)))
-            {
-                if (_tiles[_currentTile.X, _currentTile.Y].transform.childCount == 0)
+                if (CanBuildTower())
                 {
-                    if (_resources - 150 >= 0)
+                    if (!HasChildObjects())
                     {
-                        if (FindObjectOfType<PathCreation>().ViablePath(_currentTile.X,_currentTile.Y))
+                        if (FindObjectOfType<CreatePath>().ViablePath(_currentTile.X, _currentTile.Y))
                         {
-                            SpawnTower("Base", 150); 
-                        }
-                    }
-                } 
-            }
-	    }
-
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            if (!((_currentTile.X == 0 && _currentTile.Y == _startingPoint) || (_currentTile.X == FindObjectOfType<SpawnTiles>().Lenght - 1 && _currentTile.Y == _endingPoint)))
-            {
-                if (_tiles[_currentTile.X, _currentTile.Y].transform.childCount == 0)
-                {
-                    if (_resources - 250 >= 0)
-                    {
-                        if (FindObjectOfType<PathCreation>().ViablePath(_currentTile.X, _currentTile.Y))
-                        {
-                            SpawnTower("Shooting", 250);
+                            SpawnWallTower();
                         }
                     }
                 }
-            }
-        }
-
-	    if (Input.GetKeyDown(KeyCode.X))
-	    {
-	        if (_tiles[_currentTile.X, _currentTile.Y].transform.childCount != 0)
-	        {
-	            DestroyTower();
 	        }
-	    }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                if (CanBuildTower())
+	            {
+	                if (!HasChildObjects())
+	                {
+	                    if (FindObjectOfType<CreatePath>().ViablePath(_currentTile.X, _currentTile.Y))
+	                    {
+	                        SpawnShootingTower();
+	                    }
+	                }
+	            }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                if (CanBuildTower())
+	            {
+	                if (!HasChildObjects())
+	                {
+	                    if (FindObjectOfType<CreatePath>().ViablePath(_currentTile.X, _currentTile.Y))
+	                    {
+	                        SpawnAoeTower();
+	                    }
+	                }
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Backspace))
+            {
+                if (HasChildObjects())
+                {
+                    if (FindObjectOfType<CreatePath>().FindPathAfterTowerRemoval(_currentTile.X,_currentTile.Y))
+                    {
+                        DestroyTower();
+                    }
+                }
+            }
+
+	    if (Input.GetKeyDown(KeyCode.L))
+            {
+                StartCoroutine(StartWave());
+            } 
+        
     }
 
     private void ChangeHighlightedTile(char pressedKey)
@@ -124,33 +142,6 @@ public class GameController : MonoBehaviour
         ApplyMaterialOnTiles();
     }
 
-    private void SpawnTower(string towerName, int towerCost)
-    {
-        GameObject baseTower = Instantiate(Resources.Load("Prefabs/Towers/" + towerName), _tiles[_currentTile.X, _currentTile.Y].transform.position, Quaternion.identity) as GameObject;
-        if (baseTower != null)
-        {
-            baseTower.transform.parent = _tiles[_currentTile.X, _currentTile.Y].transform;
-            UpdateResources(-towerCost);
-        } 
-        ApplyMaterialOnTiles();
-    }
-
-    private void DestroyTower()
-    {
-        if (_tiles[_currentTile.X, _currentTile.Y].transform.GetChild(0).gameObject.name.Contains("Base"))
-	    {
-		    UpdateResources(150);
-        }
-        else if (_tiles[_currentTile.X, _currentTile.Y].transform.GetChild(0)
-            .gameObject.name.Contains("Shooting"))
-        {
-            UpdateResources(250);
-        }
-        Destroy(_tiles[_currentTile.X, _currentTile.Y].transform.GetChild(0).gameObject);
-        FindObjectOfType<PathCreation>().ViablePath(-1, -1);
-        ApplyMaterialOnTiles();
-    }
-
     public void UpdateResources(int value)
     {
         _resources += value;
@@ -163,11 +154,71 @@ public class GameController : MonoBehaviour
         {
             tile.GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Normal") as Material;
         }
-        var path = FindObjectOfType<PathCreation>().GetPath();
+        var path = FindObjectOfType<CreatePath>().GetPath();
         foreach (var pathPart in path)
         {
             pathPart.GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Path") as Material;
         }
         _tiles[_currentTile.X, _currentTile.Y].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Highlighted") as Material;
+    }
+
+    private IEnumerator StartWave()
+    {
+        int enemyCount = 5;
+        int enemyCounter = 0;
+        while (enemyCounter < enemyCount)
+        {
+            yield return new WaitForSeconds(1.0f);
+            SpawnEnemy();
+            enemyCounter++;
+        }
+    }
+
+    private void SpawnEnemy()
+    {
+        Instantiate(Resources.Load("Prefabs/Enemies/Type1"), _tiles[0, _startingPoint].transform.position, Quaternion.identity);
+    }
+
+    public void SpawnWallTower()
+    {
+        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Wall, _tiles[_currentTile.X, _currentTile.Y]));
+        ApplyMaterialOnTiles();
+    }
+
+    public void SpawnShootingTower()
+    {
+        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Shooting, _tiles[_currentTile.X, _currentTile.Y]));
+        ApplyMaterialOnTiles();
+    }
+
+    public void SpawnAoeTower()
+    {
+        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Aoe, _tiles[_currentTile.X, _currentTile.Y]));
+        ApplyMaterialOnTiles();
+    }
+
+    public void DestroyTower()
+    {
+        UpdateResources(FindObjectOfType<BuildTower>().DestroyTower(_tiles[_currentTile.X, _currentTile.Y].transform.GetChild(0).gameObject));
+        ApplyMaterialOnTiles();
+    }
+
+    public bool CanBuildTower()
+    {
+        if (((_currentTile.X == 0 && _currentTile.Y == _startingPoint) || (_currentTile.X == FindObjectOfType<SpawnTiles>().Lenght - 1 && _currentTile.Y == _endingPoint)))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public bool HasChildObjects()
+    {
+        if (_tiles[_currentTile.X, _currentTile.Y].transform.childCount != 0)
+        {
+            return true;
+        }
+        return false;
+
     }
 }
