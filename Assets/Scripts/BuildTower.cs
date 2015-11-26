@@ -19,7 +19,7 @@ public class BuildTower : MonoBehaviour
     public Tower ShootingTower;
     public Tower AoeTower;
 
-    void Awake()
+    void Start()
     {
         WallTower = new Tower
         {

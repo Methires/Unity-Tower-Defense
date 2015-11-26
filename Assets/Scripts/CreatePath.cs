@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Pathfinding;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class CreatePath : MonoBehaviour {
     private int _endingPoint { get; set; }
     private bool[,] _map;
     private SearchParameters _searchParameters;
+    //TO CONSIDER: Replace custom class Point with build-in Unity class Vector2
     private List<Point> _path;
     private GameObject[,] _tiles;
 
@@ -29,7 +31,7 @@ public class CreatePath : MonoBehaviour {
 
     private void InitializeMap()
     {
-        this._map = new bool[_length, _width];
+        _map = new bool[_length, _width];
         for (int i = 0; i < _length; i++)
         {
             for (int j = 0; j < _width; j++)
@@ -39,7 +41,7 @@ public class CreatePath : MonoBehaviour {
         }
         var startLocation = new Point(0, _startingPoint);
         var endLocation = new Point(_length -1, _endingPoint);
-        this._searchParameters = new SearchParameters(startLocation, endLocation, _map);
+        _searchParameters = new SearchParameters(startLocation, endLocation, _map);
     }
 
     private void MarkObstacles(int x = -1, int y = -1, bool delete = false)
@@ -87,10 +89,7 @@ public class CreatePath : MonoBehaviour {
             _path = previousPath;
             return false;
         }
-        else
-        {
-            return true;
-        }
+        return true;
     }
 
     public bool FindPathAfterTowerRemoval(int x, int y)
@@ -98,22 +97,12 @@ public class CreatePath : MonoBehaviour {
         InitializeMap();
         MarkObstacles(x,y, true);
         FindPath();
-        if (_path.Count != 0)
-        {
-            return true;
-        }
-        return false;
+        return _path.Count != 0;
     }
 
     public List<GameObject> GetPath()
     {
-        List<GameObject> goPath = new List<GameObject>();
-
-        foreach (var tile in _path)
-        {
-            goPath.Add(_tiles[tile.X,tile.Y]);
-        }
-        return goPath;
+        return _path.Select(tile => _tiles[tile.X, tile.Y]).ToList();
     }
 
     public int StartingPoint
@@ -125,6 +114,6 @@ public class CreatePath : MonoBehaviour {
     public int EndingPoint
     {
         get { return _endingPoint; }
-        private set { this._endingPoint = value; }
+        private set { _endingPoint = value; }
     }
 }
