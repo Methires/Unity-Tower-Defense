@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Assets.Scripts.Pathfinding;
 
 public class GameController : MonoBehaviour
 {
@@ -11,15 +10,14 @@ public class GameController : MonoBehaviour
     private int _waveNumber;
     private int _enemiesCounter;
     private bool _buildingTurn;
-    //TO CONSIDER: Replace custom class Point with build-in Unity class Vector2
-    private Point _currentTile;
+    private Vector2 _currentTile;
     private GameObject[,] _tiles;
 	void Start ()
 	{
 	    _resources = 0;
 	    _waveNumber = 0;
         _buildingTurn = true;
-        _currentTile = new Point(0, 0);
+        _currentTile = new Vector2(0, 0);
         _startingPoint = FindObjectOfType<CreatePath>().StartingPoint;
         _endingPoint = FindObjectOfType<CreatePath>().EndingPoint;
         _tiles = new GameObject[FindObjectOfType<SpawnTiles>().Lenght, FindObjectOfType<SpawnTiles>().Width];
@@ -36,7 +34,7 @@ public class GameController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                if (_currentTile.X < FindObjectOfType<SpawnTiles>().Lenght - 1)
+                if (_currentTile.x < FindObjectOfType<SpawnTiles>().Lenght - 1)
                 {
                     ChangeHighlightedTile('W');
                 }
@@ -44,7 +42,7 @@ public class GameController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.S))
             {
-                if (_currentTile.X > 0)
+                if (_currentTile.x > 0)
                 {
                     ChangeHighlightedTile('S');
                 }
@@ -52,7 +50,7 @@ public class GameController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                if (_currentTile.Y > 0)
+                if (_currentTile.y > 0)
                 {
                     ChangeHighlightedTile('A');
                 }
@@ -60,7 +58,7 @@ public class GameController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.D))
             {
-                if (_currentTile.Y < FindObjectOfType<SpawnTiles>().Width - 1)
+                if (_currentTile.y < FindObjectOfType<SpawnTiles>().Width - 1)
                 {
                     ChangeHighlightedTile('D');
                 }
@@ -72,7 +70,7 @@ public class GameController : MonoBehaviour
                 {
                     if (!HasChildObjects())
                     {
-                        if (FindObjectOfType<CreatePath>().ViablePath(_currentTile.X, _currentTile.Y))
+                        if (FindObjectOfType<CreatePath>().ViablePath((int)_currentTile.x, (int)_currentTile.y))
                         {
                             if (HasEnoughResources(BuildTower.TowerType.Wall))
                             {
@@ -89,7 +87,7 @@ public class GameController : MonoBehaviour
                 {
                     if (!HasChildObjects())
                     {
-                        if (FindObjectOfType<CreatePath>().ViablePath(_currentTile.X, _currentTile.Y))
+                        if (FindObjectOfType<CreatePath>().ViablePath((int)_currentTile.x, (int)_currentTile.y))
                         {
                             if (HasEnoughResources(BuildTower.TowerType.Shooting))
                             {
@@ -106,7 +104,7 @@ public class GameController : MonoBehaviour
                 {
                     if (!HasChildObjects())
                     {
-                        if (FindObjectOfType<CreatePath>().ViablePath(_currentTile.X, _currentTile.Y))
+                        if (FindObjectOfType<CreatePath>().ViablePath((int)_currentTile.x, (int)_currentTile.y))
                         {
                             if (HasEnoughResources(BuildTower.TowerType.Aoe))
                             {
@@ -121,7 +119,7 @@ public class GameController : MonoBehaviour
             {
                 if (HasChildObjects())
                 {
-                    if (FindObjectOfType<CreatePath>().FindPathAfterTowerRemoval(_currentTile.X, _currentTile.Y))
+                    if (FindObjectOfType<CreatePath>().ViablePath((int)_currentTile.x, (int)_currentTile.y))
                     {
                         DestroyTower();
                     }
@@ -147,24 +145,24 @@ public class GameController : MonoBehaviour
         switch (pressedKey)
         {
             case 'W':
-                _currentTile.X = _currentTile.X + 1;
-                _currentTile.Y = _currentTile.Y;
+                _currentTile.x = _currentTile.x + 1;
+                _currentTile.y = _currentTile.y;
                 break;
             case 'S':
-                _currentTile.X = _currentTile.X - 1;
-                _currentTile.Y = _currentTile.Y;
+                _currentTile.x = _currentTile.x - 1;
+                _currentTile.y = _currentTile.y;
                 break;
             case 'A':
-                _currentTile.X = _currentTile.X;
-                _currentTile.Y = _currentTile.Y - 1;
+                _currentTile.x = _currentTile.x;
+                _currentTile.y = _currentTile.y - 1;
                 break;
             case 'D':
-                _currentTile.X = _currentTile.X;
-                _currentTile.Y = _currentTile.Y + 1;
+                _currentTile.x = _currentTile.x;
+                _currentTile.y = _currentTile.y + 1;
                 break;
             default:
-                _currentTile.X = _currentTile.X;
-                _currentTile.Y = _currentTile.Y;
+                _currentTile.x = _currentTile.x;
+                _currentTile.y = _currentTile.y;
                 break;
         }
         ApplyMaterialOnTiles();
@@ -198,7 +196,7 @@ public class GameController : MonoBehaviour
         {
             pathPart.GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Path") as Material;
         }
-        _tiles[_currentTile.X, _currentTile.Y].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Highlighted") as Material;
+        _tiles[(int)_currentTile.x, (int)_currentTile.y].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Highlighted") as Material;
     }
 
     private IEnumerator BeginWave()
@@ -208,6 +206,7 @@ public class GameController : MonoBehaviour
         _enemiesCounter = enemiesCount;
         _buildingTurn = false;
         FindObjectOfType<SpawnTiles>().RenderTiles(false);
+        ActivateTowers(true);
         while (enemiesCounter < enemiesCount)
         {
             enemiesCounter++;
@@ -221,6 +220,7 @@ public class GameController : MonoBehaviour
         _buildingTurn = true;
         IncreaseWave();
         FindObjectOfType<SpawnTiles>().RenderTiles(true);
+        ActivateTowers(false);
     }
 
     private void SpawnEnemy()
@@ -250,36 +250,36 @@ public class GameController : MonoBehaviour
 
     private void SpawnWallTower()
     {
-        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Wall, _tiles[_currentTile.X, _currentTile.Y]));
+        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Wall, _tiles[(int)_currentTile.x, (int)_currentTile.y]));
         ApplyMaterialOnTiles();
     }
 
     private void SpawnShootingTower()
     {
-        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Shooting, _tiles[_currentTile.X, _currentTile.Y]));
+        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Shooting, _tiles[(int) _currentTile.x, (int) _currentTile.y]));
         ApplyMaterialOnTiles();
     }
 
     private void SpawnAoeTower()
     {
-        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Aoe, _tiles[_currentTile.X, _currentTile.Y]));
+        UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Aoe, _tiles[(int) _currentTile.x, (int) _currentTile.y]));
         ApplyMaterialOnTiles();
     }
 
     private void DestroyTower()
     {
-        UpdateResources(FindObjectOfType<BuildTower>().DestroyTower(_tiles[_currentTile.X, _currentTile.Y].transform.GetChild(0).gameObject));
+        UpdateResources(FindObjectOfType<BuildTower>().DestroyTower(_tiles[(int) _currentTile.x, (int) _currentTile.y].transform.GetChild(0).gameObject));
         ApplyMaterialOnTiles();
     }
 
     private bool CanBuildTower()
     {
-        return ((_currentTile.X != 0 || _currentTile.Y != _startingPoint) && (_currentTile.X != FindObjectOfType<SpawnTiles>().Lenght - 1 || _currentTile.Y != _endingPoint));
+        return ((_currentTile.x != 0 || _currentTile.y != _startingPoint) && (_currentTile.x != FindObjectOfType<SpawnTiles>().Lenght - 1 || _currentTile.y != _endingPoint));
     }
 
     private bool HasChildObjects()
     {
-        if (_tiles[_currentTile.X, _currentTile.Y].transform.childCount != 0)
+        if (_tiles[(int) _currentTile.x, (int) _currentTile.y].transform.childCount != 0)
         {
             return true;
         }
@@ -302,5 +302,19 @@ public class GameController : MonoBehaviour
                 break;
         }
         return _resources - temp >= 0;
+    }
+
+    private void ActivateTowers(bool value)
+    {
+        var aoeTowers = FindObjectsOfType<AoeTowerBehaviour>();
+        foreach (var aTower in aoeTowers)
+        {
+            aTower.GetComponent<AoeTowerBehaviour>().SetAttackPhase(value);
+        }
+        var shootingTowers = FindObjectsOfType<ShootingTowerBehaviour>();
+        foreach (var sTower in shootingTowers)
+        {
+            sTower.GetComponent<ShootingTowerBehaviour>().SetAttackPhase(value);
+        }
     }
 }

@@ -1,18 +1,19 @@
-﻿
+﻿using UnityEngine;
+
 namespace Assets.Scripts.Pathfinding
 {
     public class SearchParameters
     {
-        public Point StartLocation { get; set; }
-        public Point EndLocation { get; set; }
+        public Vector2 StartLocation { get; set; }
+        public Vector2 EndLocation { get; set; }
         public bool[,] Map { get; set; }
 
 
-        public SearchParameters(Point startLocation, Point endLocation, bool[,] map)
+        public SearchParameters(Vector2 startLocation, Vector2 endLocation, bool[,] map)
         {
-            this.StartLocation = startLocation;
-            this.EndLocation = endLocation;
-            this.Map = map;
+            StartLocation = startLocation;
+            EndLocation = endLocation;
+            Map = map;
         }
     }
 }

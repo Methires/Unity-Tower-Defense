@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 1.5
-  HealthPoints: 35
+  HealthPoints: 350
   AttackValue: 10
   BasicMaterial: {fileID: 2100000, guid: 01096d6b0d3218d49b3d4d32057a520a, type: 2}
   DamagedMaterial: {fileID: 2100000, guid: 3263ca5c2d568ed47ba325bcbfe47187, type: 2}
@@ -135,7 +135,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: HealthPoints
-      value: 35
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: AttackValue

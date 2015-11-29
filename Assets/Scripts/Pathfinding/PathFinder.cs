@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Pathfinding
 {
@@ -13,20 +14,20 @@ namespace Assets.Scripts.Pathfinding
 
         public PathFinder(SearchParameters searchParameters)
         {
-            this._searchParameters = searchParameters;
+            _searchParameters = searchParameters;
             InitializeNodes(searchParameters.Map);
-            this._startNode = this._nodes[searchParameters.StartLocation.X, searchParameters.StartLocation.Y];
-            this._startNode.State = Node.NodeState.Open;
-            this._endNode = this._nodes[searchParameters.EndLocation.X, searchParameters.EndLocation.Y];
+            _startNode = _nodes[(int)searchParameters.StartLocation.x, (int)searchParameters.StartLocation.y];
+            _startNode.State = Node.NodeState.Open;
+            _endNode = _nodes[(int)searchParameters.EndLocation.x, (int)searchParameters.EndLocation.y];
         }
 
-        public List<Point> FindPath()
+        public List<Vector2> FindPath()
         {
-            List<Point> path = new List<Point>();
+            List<Vector2> path = new List<Vector2>();
             bool success = Search(_startNode);
             if (success)
             {
-                Node node = this._endNode;
+                Node node = _endNode;
                 while (node.ParentNode != null)
                 {
                     path.Add(node.Location);
@@ -41,14 +42,14 @@ namespace Assets.Scripts.Pathfinding
 
         private void InitializeNodes(bool[,] map)
         {
-            this._width = map.GetLength(0);
-            this._height = map.GetLength(1);
-            this._nodes = new Node[this._width, this._height];
-            for (int y = 0; y < this._height; y++)
+            _width = map.GetLength(0);
+            _height = map.GetLength(1);
+            _nodes = new Node[_width, _height];
+            for (int y = 0; y < _height; y++)
             {
-                for (int x = 0; x < this._width; x++)
+                for (int x = 0; x < _width; x++)
                 {
-                    this._nodes[x, y] = new Node(x, y, map[x, y], this._searchParameters.EndLocation);
+                    _nodes[x, y] = new Node(x, y, map[x, y], _searchParameters.EndLocation);
                 }
             }
         }
@@ -61,16 +62,13 @@ namespace Assets.Scripts.Pathfinding
             nextNodes.Sort((node1, node2) => node1.F.CompareTo(node2.F));
             foreach (var nextNode in nextNodes)
             {
-                if (nextNode.Location == this._endNode.Location)
+                if (nextNode.Location == _endNode.Location)
                 {
                     return true;
                 }
-                else
+                if (Search(nextNode))
                 {
-                    if (Search(nextNode))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
             return false;
@@ -79,19 +77,19 @@ namespace Assets.Scripts.Pathfinding
         private List<Node> GetAdjacentWalkableNodes(Node fromNode)
         {
             List<Node> walkableNodes = new List<Node>();
-            IEnumerable<Point> nextLocations = GetAdjacentLocations(fromNode.Location);
+            IEnumerable<Vector2> nextLocations = GetAdjacentLocations(fromNode.Location);
 
             foreach (var location in nextLocations)
             {
-                int x = location.X;
-                int y = location.Y;
+                int x = (int)location.x;
+                int y = (int)location.y;
 
-                if (x < 0 || x >= this._width || y < 0 || y >= this._height)
+                if (x < 0 || x >= _width || y < 0 || y >= _height)
                 {
                     continue;
                 }
 
-                Node node = this._nodes[x, y];
+                Node node = _nodes[x, y];
                 if (!node.IsWalkable)
                 {
                     continue;
@@ -121,18 +119,18 @@ namespace Assets.Scripts.Pathfinding
             return walkableNodes;
         }
 
-        private static IEnumerable<Point> GetAdjacentLocations(Point fromLocation)
+        private static IEnumerable<Vector2> GetAdjacentLocations(Vector2 fromLocation)
         {
-            return new Point[]
+            return new Vector2[]
             {
-                new Point(fromLocation.X - 1, fromLocation.Y - 1),
-                new Point(fromLocation.X - 1, fromLocation.Y),
-                new Point(fromLocation.X - 1, fromLocation.Y + 1),
-                new Point(fromLocation.X, fromLocation.Y + 1),
-                new Point(fromLocation.X + 1, fromLocation.Y + 1),
-                new Point(fromLocation.X + 1, fromLocation.Y),
-                new Point(fromLocation.X + 1, fromLocation.Y - 1),
-                new Point(fromLocation.X, fromLocation.Y - 1)
+                new Vector2(fromLocation.x - 1, fromLocation.y - 1), 
+                new Vector2(fromLocation.x - 1, fromLocation.y), 
+                new Vector2(fromLocation.x - 1, fromLocation.y + 1), 
+                new Vector2(fromLocation.x, fromLocation.y + 1), 
+                new Vector2(fromLocation.x + 1, fromLocation.y + 1),
+                new Vector2(fromLocation.x + 1, fromLocation.y),
+                new Vector2(fromLocation.x + 1, fromLocation.y - 1),
+                new Vector2(fromLocation.x, fromLocation.y - 1)
             };
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts.Pathfinding
 {
@@ -12,7 +13,7 @@ namespace Assets.Scripts.Pathfinding
         }
 
         private Node _parentNode;
-        public Point Location { get; private set; }
+        public Vector2 Location { get; private set; }
         public bool IsWalkable { get; set; }
         public float G { get; private set; }
         public float H { get; private set; }
@@ -20,32 +21,32 @@ namespace Assets.Scripts.Pathfinding
 
         public float F
         {
-            get { return this.G + this.H; }
+            get { return G + H; }
         }
 
         public Node ParentNode
         {
-            get { return this._parentNode; }
+            get { return _parentNode; }
             set
             {
-                this._parentNode = value;
-                this.G = this._parentNode.G + GetTraversalCost(this.Location, this._parentNode.Location);
+                _parentNode = value;
+                G = _parentNode.G + GetTraversalCost(Location, _parentNode.Location);
             }
         }
 
-        public Node(int x, int y, bool isWalkable, Point endLocation)
+        public Node(int x, int y, bool isWalkable, Vector2 endLocation)
         {
-            this.Location = new Point(x, y);
-            this.State = NodeState.Untested;
-            this.IsWalkable = isWalkable;
-            this.H = GetTraversalCost(this.Location, endLocation);
-            this.G = 0;
+            Location = new Vector2(x, y);
+            State = NodeState.Untested;
+            IsWalkable = isWalkable;
+            H = GetTraversalCost(Location, endLocation);
+            G = 0;
         }
 
-        internal static float GetTraversalCost(Point location, Point otherLocation)
+        internal static float GetTraversalCost(Vector2 location, Vector2 otherLocation)
         {
-            float deltaX = otherLocation.X - location.X;
-            float deltaY = otherLocation.Y - location.Y;
+            float deltaX = otherLocation.x - location.x;
+            float deltaY = otherLocation.y - location.y;
             return (float)Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
         }
     }

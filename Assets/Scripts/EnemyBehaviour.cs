@@ -38,11 +38,11 @@ public class EnemyBehaviour : MonoBehaviour
                 i++;
 	        }
 	    }
-        //TO DO: Check it, as it seems shady and propably won't work as intented
+
 	    if (_wasDamaged)
 	    {
-	        _timeAfterDamaged = 1.5f*Time.deltaTime;
-	        if (_timeAfterDamaged > 2.0f)
+	        _timeAfterDamaged += 1.5f*Time.deltaTime;
+	        if (_timeAfterDamaged > 1.0f)
 	        {
 	            GetComponent<Renderer>().material = BasicMaterial;
 	            _wasDamaged = false;

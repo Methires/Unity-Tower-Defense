@@ -12,7 +12,7 @@ public class CreatePath : MonoBehaviour {
     private bool[,] _map;
     private SearchParameters _searchParameters;
     //TO CONSIDER: Replace custom class Point with build-in Unity class Vector2
-    private List<Point> _path;
+    private List<Vector2> _path;
     private GameObject[,] _tiles;
 
     void Start()
@@ -39,8 +39,8 @@ public class CreatePath : MonoBehaviour {
                 _map[i, j] = true;
             }
         }
-        var startLocation = new Point(0, _startingPoint);
-        var endLocation = new Point(_length -1, _endingPoint);
+        var startLocation = new Vector2(0, _startingPoint);
+        var endLocation = new Vector2(_length -1, _endingPoint);
         _searchParameters = new SearchParameters(startLocation, endLocation, _map);
     }
 
@@ -102,7 +102,7 @@ public class CreatePath : MonoBehaviour {
 
     public List<GameObject> GetPath()
     {
-        return _path.Select(tile => _tiles[tile.X, tile.Y]).ToList();
+        return _path.Select(tile => _tiles[(int)tile.x, (int)tile.y]).ToList();
     }
 
     public int StartingPoint
