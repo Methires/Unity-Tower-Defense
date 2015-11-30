@@ -119,7 +119,7 @@ public class GameController : MonoBehaviour
             {
                 if (HasChildObjects())
                 {
-                    if (FindObjectOfType<CreatePath>().ViablePath((int)_currentTile.x, (int)_currentTile.y))
+                    if (FindObjectOfType<CreatePath>().FindPathAfterTowerRemoval((int)_currentTile.x, (int)_currentTile.y))
                     {
                         DestroyTower();
                     }

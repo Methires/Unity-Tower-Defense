@@ -27,9 +27,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 437416}
   - 33: {fileID: 3390514}
-  - 65: {fileID: 6510148}
+  - 136: {fileID: 13695256}
   - 23: {fileID: 2374358}
-  - 54: {fileID: 5471148}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -74,8 +73,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 178486}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: .5, z: 0}
+  m_LocalScale: {x: .75, y: .75, z: .75}
   m_Children:
   - {fileID: 471716}
   m_Father: {fileID: 428336}
@@ -87,8 +86,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 146148}
   m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106709}
-  m_LocalPosition: {x: 0, y: .639999986, z: .25}
-  m_LocalScale: {x: .25, y: .300000012, z: .25}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: .75, y: .75, z: .75}
   m_Children: []
   m_Father: {fileID: 437416}
   m_RootOrder: 0
@@ -153,34 +152,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 178486}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &5471148
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 178486}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: .0500000007
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!65 &6510148
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 178486}
-  m_Material: {fileID: 13400000, guid: 0b167c1f922f5c4458ce4d3f11a074f8, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &11467544
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -192,8 +164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b38823fa8b20e468ec8e992006a916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackValue: 0
-  AttackInterval: 0
+  AttackValue: 15
+  AttackInterval: 4.5
 --- !u!135 &13562776
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -212,7 +184,20 @@ CapsuleCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 146148}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 0b167c1f922f5c4458ce4d3f11a074f8, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: .5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &13695256
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 178486}
+  m_Material: {fileID: 13400000, guid: 0b167c1f922f5c4458ce4d3f11a074f8, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: .5
@@ -229,6 +214,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_IsTrigger
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: AttackValue
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: AttackInterval
+      value: 4.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

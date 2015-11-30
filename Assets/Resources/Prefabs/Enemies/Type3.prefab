@@ -8,11 +8,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 483142}
-  - 33: {fileID: 3343720}
-  - 65: {fileID: 6586546}
-  - 23: {fileID: 2333596}
-  - 114: {fileID: 11419544}
-  - 54: {fileID: 5444856}
+  - 33: {fileID: 3398856}
+  - 65: {fileID: 6539622}
+  - 23: {fileID: 2313738}
+  - 114: {fileID: 11428010}
+  - 54: {fileID: 5409632}
   m_Layer: 0
   m_Name: Type3
   m_TagString: Enemy
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!23 &2333596
+--- !u!23 &2313738
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -56,14 +56,14 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3343720
+--- !u!33 &3398856
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 131942}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &5444856
+--- !u!54 &5409632
 Rigidbody:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -78,19 +78,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &6586546
+--- !u!65 &6539622
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 131942}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 15671fcb474384f499ebcdb81e247520, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11419544
+--- !u!114 &11428010
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -102,8 +102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 1.5
-  HealthPoints: 350
-  AttackValue: 10
+  HealthPoints: 500
+  AttackValue: 15
   BasicMaterial: {fileID: 2100000, guid: 01096d6b0d3218d49b3d4d32057a520a, type: 2}
   DamagedMaterial: {fileID: 2100000, guid: 3263ca5c2d568ed47ba325bcbfe47187, type: 2}
 --- !u!1001 &100100000

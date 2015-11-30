@@ -11,7 +11,6 @@ public class CreatePath : MonoBehaviour {
     private int _endingPoint { get; set; }
     private bool[,] _map;
     private SearchParameters _searchParameters;
-    //TO CONSIDER: Replace custom class Point with build-in Unity class Vector2
     private List<Vector2> _path;
     private GameObject[,] _tiles;
 
