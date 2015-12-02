@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92cae52b74ad7f4cbc6cf20bca80b39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackValue: 25
+  AttackValue: 100
   AttackInterval: 7.5
 --- !u!135 &13574712
 SphereCollider:
@@ -241,7 +241,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: AttackValue
-      value: 25
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

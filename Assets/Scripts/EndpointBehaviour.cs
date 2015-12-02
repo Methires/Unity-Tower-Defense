@@ -2,14 +2,21 @@
 
 public class EndpointBehaviour : MonoBehaviour
 {
-    public int Health;
+    public int MaxHealth;
+    private int _currentHealth;
+
+    void Start()
+    {
+        _currentHealth = MaxHealth;
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateCoreLife(_currentHealth, MaxHealth);
+    }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Enemy")
         {
-            DealDamage(other.GetComponent<EnemyBehaviour>().DealDamage(false));
-            other.GetComponent<EnemyBehaviour>().DeleteEnemy();
+            DealDamage(other.GetComponent<EnemyBehaviour>().DealDamage());
+            Destroy(other.gameObject);
         }
         else if (other.tag == "Player")
         {
@@ -19,9 +26,13 @@ public class EndpointBehaviour : MonoBehaviour
 
     private void DealDamage(int value)
     {
-        Health -= value;
-        //TO DO: Play some kind of sound
-        if (Health <= 0)
+        _currentHealth -= value;
+        if (_currentHealth <= 0)
+        {
+            _currentHealth = 0;
+        }
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateCoreLife(_currentHealth, MaxHealth);
+        if (_currentHealth == 0)
         {
             GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().GameOver();
         }

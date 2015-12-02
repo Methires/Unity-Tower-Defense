@@ -101,9 +101,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b7e6eeb70bf6247a2ea28e71f988d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 1.5
-  HealthPoints: 500
-  AttackValue: 15
+  Speed: 2
+  HealthPoints: 450
+  AttackValue: 35
   BasicMaterial: {fileID: 2100000, guid: 01096d6b0d3218d49b3d4d32057a520a, type: 2}
   DamagedMaterial: {fileID: 2100000, guid: 3263ca5c2d568ed47ba325bcbfe47187, type: 2}
 --- !u!1001 &100100000
@@ -115,7 +115,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: Speed
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_TagString
@@ -135,11 +135,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: HealthPoints
-      value: 350
+      value: 450
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: AttackValue
-      value: 10
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: DamagedMaterial

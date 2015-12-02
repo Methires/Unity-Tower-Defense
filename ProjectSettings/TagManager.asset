@@ -7,6 +7,7 @@ TagManager:
   - ResourcesText
   - Enemy
   - WaveText
+  - CoreText
   layers:
   - Default
   - TransparentFX

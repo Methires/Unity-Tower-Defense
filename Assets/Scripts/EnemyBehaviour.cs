@@ -50,13 +50,9 @@ public class EnemyBehaviour : MonoBehaviour
 	    }
     }
 
-    public int DealDamage(bool isItPlayer)
+    public int DealDamage()
     {
-        if (isItPlayer)
-        {
-            return AttackValue;
-        }
-        return AttackValue * 5;
+        return AttackValue;
     }
 
     public void ReceiveDamage(int value)
@@ -67,20 +63,14 @@ public class EnemyBehaviour : MonoBehaviour
         _wasDamaged = true;
         if (HealthPoints <= 0)
         {
-            DeleteEnemy();
+            Destroy(gameObject);
         }
-    }
-
-    public void DeleteEnemy()
-    {
-        //TO DO: Make value for UpdateResources() more fancy
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateResources(AttackValue * 10);
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().DecreaseEnemyCounter();
-        Destroy(this.gameObject);
     }
 
     void OnDestroy()
     {
         //TO DO: maybe creating some kind of particle emitter
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateResources(AttackValue * 10);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().DecreaseEnemyCounter();
     }
 }
