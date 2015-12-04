@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6f0c0e3338ec15c408bbce5f118ff7e9
+timeCreated: 1445288880
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - HpTexture2D: {fileID: 2800000, guid: a053f3cb8186134438877799512becb6, type: 3}
+  - StaminaTexture2D: {fileID: 2800000, guid: 9ddf6e989538cef40937eff7899d8e7c, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
