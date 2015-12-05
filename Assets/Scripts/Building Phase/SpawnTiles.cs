@@ -19,9 +19,9 @@ public class SpawnTiles : MonoBehaviour
                 tile.transform.parent = transform;
                 Vector3 position = new Vector3
                 {
-                    x = j * 1.05f,
+                    x = j * 10.5f,
                     y = 0.0f,
-                    z = i * 1.05f
+                    z = i * 10.5f
                 };
                 tile.transform.localPosition = position;
                 _tiles[i, j] = tile;

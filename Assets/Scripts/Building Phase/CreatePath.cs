@@ -107,7 +107,7 @@ public class CreatePath : MonoBehaviour {
     public int StartingPoint
     {
         get { return _startingPoint; }
-        private set { this._startingPoint = value; }
+        private set { _startingPoint = value; }
     }
 
     public int EndingPoint

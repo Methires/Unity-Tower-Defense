@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class Shooting : MonoBehaviour
 {
     public Texture2D CrosshairTexture;
+    public GameObject GunTip;
     [Header("Sounds")]
     public AudioClip ShotSound;
     public AudioClip ReloadSound;
@@ -18,22 +20,28 @@ public class Shooting : MonoBehaviour
     private int _currentAmmo;
     private int _currentClip;
     private bool _isReloading;
+    private bool _isShooting;
     private float _reloadTimeCounter;
+    private float _shootingTimeCounter;
+    private float _laserTimeCounter;
     private Rect _crosshairPosition;
+    private LineRenderer _line;
+
 
 	void Start ()
 	{
         _isReloading = false;
         _reloadTimeCounter = 0.0f;
-	    Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
         _crosshairPosition = new Rect((Screen.width - CrosshairTexture.width) / 2 , 
                              (Screen.height - CrosshairTexture.height) / 2,
                              CrosshairTexture.width, 
                              CrosshairTexture.height);
 	    _currentClip = ClipSize;
 	    _currentAmmo = MaxAmmo - ClipSize;
-       // GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
+	    _line = GunTip.GetComponent<LineRenderer>();
+	    _line.enabled = false;
+        
+	    // GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
 	}
 
     void OnGUI()
@@ -43,25 +51,19 @@ public class Shooting : MonoBehaviour
 
     void Update () 
     {
-	    if (Input.GetKeyDown(KeyCode.Escape))
-	    {
-	        Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-	    }
-
 	    if (Input.GetButtonDown("Fire1"))
 	    {
 	        Shoot();
 	    }
 
-        if (Input.GetKeyDown(KeyCode.R) && _currentClip != ClipSize)
+        if (Input.GetButtonDown("Reload") && _currentClip != ClipSize)
         {
             Reload();
         }
 
         if (_isReloading)
         {
-            _reloadTimeCounter += Time.deltaTime * 1.1f;
+            _reloadTimeCounter += Time.deltaTime;
             if (_reloadTimeCounter > ReloadTime)
             {
                 _isReloading = false;
@@ -69,32 +71,51 @@ public class Shooting : MonoBehaviour
                 //GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
             }
         }
+
+        if (_isShooting)
+        {
+            _shootingTimeCounter += Time.deltaTime;
+            _laserTimeCounter += Time.deltaTime;
+            if (_laserTimeCounter > 0.1f)
+            {
+                _line.enabled = false;
+            }
+            if (_shootingTimeCounter > 1.0f)
+            {
+                _isShooting = false;            
+                _shootingTimeCounter = 0.0f;
+                _laserTimeCounter = 0.0f;
+            }
+        }
     }
 
     private void Shoot()
     {
-        if (_currentClip > 0 && !_isReloading)
+        if (_currentClip > 0 && !_isReloading && !_isShooting)
         {
             GetComponent<AudioSource>().clip = ShotSound;
+            _isShooting = true;
+            _line.enabled = true;
             _currentClip--;
-            Vector3 forward = transform.TransformDirection(Vector3.forward);
+            Ray ray = new Ray(GunTip.transform.position, GunTip.transform.forward);
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, forward, out hit))
+            _line.SetPosition(0, ray.origin);
+            if (Physics.Raycast(ray, out hit))
             {
+                _line.SetPosition(1, hit.point);
                 if (hit.transform.gameObject.tag == "Enemy" && hit.distance < Range)
                 {
                     hit.transform.gameObject.GetComponent<EnemyBehaviour>().ReceiveDamage(AttackValue);
-                    Debug.Log("You hit enemy");
                 }
-                else if (hit.distance > Range && hit.transform.gameObject == null)
-                {
-                    Debug.Log("You hit nothing");
-                }
+            }
+            else
+            {
+                _line.SetPosition(1, ray.GetPoint(Range));
             }
             GetComponent<AudioSource>().Play();
             //GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
         }
-        else if (_currentClip == 0)
+        else if (_currentClip == 0 && !_isShooting)
         {
             Reload();
         }
@@ -122,7 +143,7 @@ public class Shooting : MonoBehaviour
         {
             GetComponent<AudioSource>().clip = NoAmmoSound;
             GetComponent<AudioSource>().Play();
-        }
+        }        
     }
 
     public void RenewAmmo()

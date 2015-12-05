@@ -46,7 +46,7 @@ public class PlayerStats : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_characterController.isGrounded && Input.GetKey(KeyCode.LeftShift) && _lastPosition != transform.position && _currentStamina > 0)
+        if (_characterController.isGrounded && Input.GetButton("Sprint") && _lastPosition != transform.position && _currentStamina > 0)
         {
             _lastPosition = transform.position;
             _currentStamina -= 0.75f;
@@ -76,21 +76,20 @@ public class PlayerStats : MonoBehaviour
                 }
             }
         }
-
         _firstPersonController.CanRun = _currentStamina > 0;
     }
 
-    void DecreaseHealth(float damage)
+    public void DecreaseHealth(float damage)
     {
         _currentHealth -= damage;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, MaxHealth);
         if (_currentHealth < 0)
         {
-            //Game Over
+            GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().GameOver();
         }
     }
 
-    void IncreaseHealth(float value)
+    public void IncreaseHealth(float value)
     {
         _currentHealth += value;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, MaxHealth);

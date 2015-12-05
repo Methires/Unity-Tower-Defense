@@ -67,9 +67,18 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            other.GetComponent<PlayerStats>().DecreaseHealth(AttackValue);
+        }
+    }
+
     void OnDestroy()
     {
         //TO DO: maybe creating some kind of particle emitter
+        //IMPORTANT!!!: something is not working with updateresources
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateResources(AttackValue * 10);
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().DecreaseEnemyCounter();
     }

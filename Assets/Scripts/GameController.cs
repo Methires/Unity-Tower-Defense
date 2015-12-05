@@ -1,9 +1,12 @@
 ﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
     public int StartingResources;
+    public GameObject BuildingCamera;
+    public GameObject Player;
     private int _resources;
     private int _startingPoint;
     private int _endingPoint;
@@ -13,7 +16,8 @@ public class GameController : MonoBehaviour
     private bool _gameOver;
     private Vector2 _currentTile;
     private GameObject[,] _tiles;
-	void Start ()
+
+    void Start ()
 	{
 	    _resources = 0;
 	    _waveNumber = 0;
@@ -25,6 +29,7 @@ public class GameController : MonoBehaviour
         _tiles = new GameObject[FindObjectOfType<SpawnTiles>().Lenght, FindObjectOfType<SpawnTiles>().Width];
         _tiles = FindObjectOfType<SpawnTiles>().GetAllTiles();
         _enemiesCounter = 0;
+        ChangeMainCamera(true);
         ChangeHighlightedTile(' ');
         UpdateResources(StartingResources);
         IncreaseWave();
@@ -230,6 +235,8 @@ public class GameController : MonoBehaviour
         _buildingTurn = false;
         FindObjectOfType<SpawnTiles>().RenderTiles(false);
         ActivateTowers(true);
+        ChangeMainCamera(false);
+        Player.transform.position = FindObjectOfType<CreatePath>().GetPath().Last().transform.position;
         while (enemiesCounter < enemiesCount)
         {
             enemiesCounter++;
@@ -244,6 +251,13 @@ public class GameController : MonoBehaviour
         IncreaseWave();
         FindObjectOfType<SpawnTiles>().RenderTiles(true);
         ActivateTowers(false);
+        ChangeMainCamera(true);
+    }
+
+    private void ChangeMainCamera(bool isBuildingPhase)
+    {
+        Player.SetActive(!isBuildingPhase);
+        BuildingCamera.SetActive(isBuildingPhase);
     }
 
     private void SpawnEnemy()

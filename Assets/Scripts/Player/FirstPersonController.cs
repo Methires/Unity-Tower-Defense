@@ -171,7 +171,7 @@ public class FirstPersonController : MonoBehaviour
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+        m_IsWalking = !Input.GetButton("Sprint");
         speed = m_IsWalking ? m_WalkSpeed : m_CanRun ? m_RunSpeed : m_WalkSpeed;
         m_Input = new Vector2(horizontal, vertical);
         if (m_Input.sqrMagnitude > 1)

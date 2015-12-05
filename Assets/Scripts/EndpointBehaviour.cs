@@ -20,7 +20,7 @@ public class EndpointBehaviour : MonoBehaviour
         }
         else if (other.tag == "Player")
         {
-            //TO DO: heal player
+            other.GetComponent<PlayerStats>().IncreaseHealth(other.GetComponent<PlayerStats>().MaxHealth);
         }
     }
 
