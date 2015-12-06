@@ -5,6 +5,8 @@ public class ShootingTowerBehaviour : MonoBehaviour
 {
     public int AttackValue;
     public float AttackInterval;
+    public GameObject Bullet;
+
     private float _attackTimeCouter;
     private bool _attackPhase;
     private List<GameObject> _currentEnemiesInProximity;
@@ -24,19 +26,16 @@ public class ShootingTowerBehaviour : MonoBehaviour
             if (_currentEnemiesInProximity.Count != 0 && _currentEnemiesInProximity[0] != null)
             {
                 Vector3 direction = _currentEnemiesInProximity[0].transform.position - transform.position;
-                Quaternion rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction),
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction),
                     720.0f*Time.deltaTime);
-                transform.rotation = rotation;
-
                 if (_attackTimeCouter > AttackInterval)
                 {
-                    _currentEnemiesInProximity[0].GetComponent<EnemyBehaviour>().ReceiveDamage(AttackValue);
-                    //GameObject bullet = Instantiate(Resources.Load("Prefabs/Towers/Bullet")) as GameObject;
-                    //bullet.GetComponent<BulletBehaviour>().SetGoal(_currentEnemiesInProximity[0]);
+                    GameObject bullet = Instantiate(Bullet, transform.position, Quaternion.identity) as GameObject;
+                    bullet.GetComponent<NanobotBehaviour>().AcquireTarget(_currentEnemiesInProximity[0], AttackValue);
                    _attackTimeCouter = 0.0f;
                 }
             }
-            _attackTimeCouter += 1.5f*Time.deltaTime;
+            _attackTimeCouter += Time.deltaTime;
         }
 	}
 
@@ -59,6 +58,11 @@ public class ShootingTowerBehaviour : MonoBehaviour
     public void SetAttackPhase(bool value)
     {
         _attackPhase = value;
+        if (!value)
+        {
+            _currentEnemiesInProximity.Clear();
+            _attackTimeCouter = 0.0f;
+        }
     }
 
     private void ValidateList()

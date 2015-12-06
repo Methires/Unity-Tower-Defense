@@ -8,13 +8,11 @@ public class BuildTower : MonoBehaviour
         Shooting,
         Aoe
     }
-
     public struct Tower
     {
         public TowerType Type;
         public int Cost;
     }
-
     public Tower WallTower;
     public Tower ShootingTower;
     public Tower AoeTower;

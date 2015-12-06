@@ -5,11 +5,11 @@ public class AoeTowerBehaviour : MonoBehaviour
 {
     public int AttackValue;
     public float AttackInterval;
+
     private float _attackTimeCouter;
     private bool _attackPhase;
     private List<GameObject> _currentEnemiesInProximity;
-
-    
+   
     void Start()
     {
         _attackTimeCouter = 0.0f;
@@ -26,11 +26,12 @@ public class AoeTowerBehaviour : MonoBehaviour
                 ValidateList();
                 foreach (var enemy in _currentEnemiesInProximity)
                 {
+                    //TODO: Spawn particles
                     enemy.GetComponent<EnemyBehaviour>().ReceiveDamage(AttackValue);
                 }
                 _attackTimeCouter = 0.0f;
             }
-            _attackTimeCouter += 1.5f*Time.deltaTime; 
+            _attackTimeCouter += Time.deltaTime; 
 	    }
     }
 
@@ -53,9 +54,10 @@ public class AoeTowerBehaviour : MonoBehaviour
     public void SetAttackPhase(bool value)
     {
         _attackPhase = value;
-        if (value == false)
+        if (!value)
         {
             _currentEnemiesInProximity.Clear();
+            _attackTimeCouter = 0.0f;
         }
     }
 

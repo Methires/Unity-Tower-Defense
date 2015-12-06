@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     private GameObject _uiBuildingPhase;
     private GameObject _uiPauseMenu;
     private GameObject _uiTowerMenu;
+    private GameObject _uiShooterPhase;
     private GameObject[,] _tiles;
 
     void Awake()
@@ -31,6 +32,7 @@ public class GameController : MonoBehaviour
         _uiBuildingPhase = GameObject.FindGameObjectWithTag("BuildingPhaseView");
         _uiPauseMenu = GameObject.FindGameObjectWithTag("PauseView");
         _uiTowerMenu = GameObject.FindGameObjectWithTag("TowerMenuView");
+        _uiShooterPhase = GameObject.FindGameObjectWithTag("ShooterPhaseView");
     }
 
     void Start ()
@@ -38,6 +40,7 @@ public class GameController : MonoBehaviour
         UpdateResources(StartingResources);
         IncreaseWave();
         _isBuildingPhase = true;
+        _uiShooterPhase.SetActive(false);
         _currentTile = new Vector2(0, 0);
         var path = FindObjectOfType<CreatePath>();
         _startingPoint = path.StartingPoint;
@@ -62,7 +65,7 @@ public class GameController : MonoBehaviour
                     OpenPauseMenuUi(true);
                 }  
             }
-            else if(_isPauseMenuOpen && _isTowerMenuOpen)
+            else if(_isPauseMenuOpen && !_isTowerMenuOpen)
             {
                 if (Input.GetButtonDown("Cancel"))
                 {
@@ -179,7 +182,7 @@ public class GameController : MonoBehaviour
     public void UpdateCoreLife(float currentHealthPoints, float maxHealthPoints)
     {
         var temp = Mathf.Round(currentHealthPoints/maxHealthPoints * 100.0f);
-       _uiBothPhases.transform.GetChild(2).GetComponent<Text>().text = "Core: " + temp + "%";
+       _uiBothPhases.transform.GetChild(2).GetComponent<Text>().text = "Core: " + temp;
     }
 
     public void GameOver()
@@ -232,6 +235,7 @@ public class GameController : MonoBehaviour
         var path = FindObjectOfType<CreatePath>().GetPath();
         Player.transform.position = path[path.Count - 2].transform.position;
         _uiBuildingPhase.SetActive(false);
+        _uiShooterPhase.SetActive(true);
         ShowCursor(false);
         while (enemiesCounter < enemiesCount)
         {
@@ -253,7 +257,9 @@ public class GameController : MonoBehaviour
         if (!_isPauseMenuOpen)
         {
             _uiBuildingPhase.SetActive(true);
+            _uiShooterPhase.SetActive(false);
         }
+        BlockPlayer(true);
         ShowCursor(true);
     }
 
@@ -352,37 +358,28 @@ public class GameController : MonoBehaviour
 
     public void SpawnTowerWithButton(string towerType)
     {
-        if (CanBuildTower())
+        switch (towerType)
         {
-            if (!HasChildObjects())
-            {
-                if (FindObjectOfType<CreatePath>().ViablePath((int) _currentTile.x, (int) _currentTile.y))
+            case "Wall":
+                if (HasEnoughResources(BuildTower.TowerType.Wall))
                 {
-                    switch (towerType)
-                    {
-                        case "Wall":
-                            if (HasEnoughResources(BuildTower.TowerType.Wall))
-                            {
-                                SpawnWallTower();
-                            }
-                            break;
-                        case "AOE":
-                            if (HasEnoughResources(BuildTower.TowerType.Aoe))
-                            {
-                                SpawnAoeTower();
-                            }
-                            break;
-                        case "Shoot":
-                            if (HasEnoughResources(BuildTower.TowerType.Shooting))
-                            {
-                                SpawnShootingTower();
-                            }
-                            break;
-                    }
-                    OpenTowerMenuUi(false);
+                    SpawnWallTower();
                 }
-            }
+                break;
+            case "AOE":
+                if (HasEnoughResources(BuildTower.TowerType.Aoe))
+                {
+                    SpawnAoeTower();
+                }
+                break;
+            case "Shoot":
+                if (HasEnoughResources(BuildTower.TowerType.Shooting))
+                {
+                    SpawnShootingTower();
+                }
+                break;
         }
+        OpenTowerMenuUi(false);
     }
 
     public void DestroyTowerWithButton()
@@ -393,8 +390,8 @@ public class GameController : MonoBehaviour
             {
                 DestroyTower();
             }
+            OpenTowerMenuUi(false);
         }
-        OpenTowerMenuUi(false);
     }
 
     public void StartWaveWithButton()
@@ -407,6 +404,63 @@ public class GameController : MonoBehaviour
         _isTowerMenuOpen = isVisible;
         _uiBuildingPhase.SetActive(!isVisible);
         _uiTowerMenu.SetActive(isVisible);
+        if (isVisible)
+        {
+            if (HasChildObjects())
+            {
+                _uiTowerMenu.transform.GetChild(0).GetComponent<Button>().interactable = false;
+                _uiTowerMenu.transform.GetChild(1).GetComponent<Button>().interactable = false;
+                _uiTowerMenu.transform.GetChild(2).GetComponent<Button>().interactable = false;
+                _uiTowerMenu.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            }
+            else
+            {
+                if (CanBuildTower() && FindObjectOfType<CreatePath>().ViablePath((int) _currentTile.x, (int) _currentTile.y))
+                {
+                    if (HasEnoughResources(BuildTower.TowerType.Wall))
+                    {
+                        _uiTowerMenu.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    }
+                    else
+                    {
+                        _uiTowerMenu.transform.GetChild(0).GetComponent<Button>().interactable = false;
+                    }
+
+                    if (HasEnoughResources(BuildTower.TowerType.Shooting))
+                    {
+                        _uiTowerMenu.transform.GetChild(1).GetComponent<Button>().interactable = true;
+                    }
+                    else
+                    {
+                        _uiTowerMenu.transform.GetChild(1).GetComponent<Button>().interactable = false;
+                    }
+                    if(HasEnoughResources(BuildTower.TowerType.Aoe))
+                    {
+                        _uiTowerMenu.transform.GetChild(2).GetComponent<Button>().interactable = true;
+                    }
+                    else
+                    {
+                        _uiTowerMenu.transform.GetChild(2).GetComponent<Button>().interactable = false;
+                    }
+                }
+                else
+                {
+                    _uiTowerMenu.transform.GetChild(0).GetComponent<Button>().interactable = false;
+                    _uiTowerMenu.transform.GetChild(1).GetComponent<Button>().interactable = false;
+                    _uiTowerMenu.transform.GetChild(2).GetComponent<Button>().interactable = false;
+                }
+                _uiTowerMenu.transform.GetChild(3).GetComponent<Button>().interactable = false;
+            }
+            
+        }
+        else
+        {
+            _uiTowerMenu.transform.GetChild(0).GetComponent<Button>().interactable = true;
+            _uiTowerMenu.transform.GetChild(1).GetComponent<Button>().interactable = true;
+            _uiTowerMenu.transform.GetChild(2).GetComponent<Button>().interactable = true;
+            _uiTowerMenu.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            _uiTowerMenu.transform.GetChild(4).GetComponent<Button>().interactable = true;
+        }
     }
 
     public void OpenPauseMenuUi(bool isVisible)
@@ -422,6 +476,11 @@ public class GameController : MonoBehaviour
         {
             BlockPlayer(!isVisible);
             ShowCursor(isVisible);
+            _uiShooterPhase.SetActive(!isVisible);
+        }
+        if (_isGameOver)
+        {
+            _uiPauseMenu.transform.GetChild(0).GetComponent<Button>().interactable = false;
         }
     }
 

@@ -24,7 +24,7 @@ public class PlayerStats : MonoBehaviour
     private GameObject _gun;
     private CharacterController _characterController;
     private FirstPersonController _firstPersonController;
-    private Shooting _shooting { get; set; }
+    private Shooting _shooting;
 
     void Start()
     {

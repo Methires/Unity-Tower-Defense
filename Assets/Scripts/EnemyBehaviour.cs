@@ -84,6 +84,6 @@ public class EnemyBehaviour : MonoBehaviour
 
     void OnDestroy()
     {
-        //TO DO: maybe creating some kind of particle emitter
+        //TODO: maybe creating some kind of particle emitter
     }
 }

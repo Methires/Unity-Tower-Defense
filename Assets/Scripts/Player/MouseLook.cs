@@ -12,6 +12,7 @@ public class MouseLook
     public bool smooth;
     public float smoothTime = 5f;
 
+    private bool m_BlockLook;
     private Quaternion m_CharacterTargetRot;
     private Quaternion m_CameraTargetRot;
 
@@ -23,8 +24,8 @@ public class MouseLook
 
     public void LookRotation(Transform character, Transform camera)
     {
-        float yRot = Input.GetAxis("Mouse X") * XSensitivity;
-        float xRot = Input.GetAxis("Mouse Y") * YSensitivity;
+        float yRot = Input.GetAxis("Mouse X") * XSensitivity * Convert.ToSingle(!m_BlockLook);
+        float xRot = Input.GetAxis("Mouse Y") * YSensitivity * Convert.ToSingle(!m_BlockLook);
         m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
         m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
         if (clampVerticalRotation)
@@ -55,5 +56,10 @@ public class MouseLook
         angleX = Mathf.Clamp(angleX, MinimumX, MaximumX);
         q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
         return q;
+    }
+
+    public bool BlockLook
+    {
+        set { m_BlockLook = value; }
     }
 }

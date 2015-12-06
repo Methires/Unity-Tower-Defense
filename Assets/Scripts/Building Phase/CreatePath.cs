@@ -7,8 +7,8 @@ public class CreatePath : MonoBehaviour {
 
     private int _length;
     private int _width;
-    private int _startingPoint { get; set; }
-    private int _endingPoint { get; set; }
+    private int _startingPoint;
+    private int _endingPoint;
     private bool[,] _map;
     private SearchParameters _searchParameters;
     private List<Vector2> _path;

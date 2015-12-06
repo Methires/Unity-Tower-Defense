@@ -210,6 +210,10 @@ public class FirstPersonController : MonoBehaviour
     public bool BlockMovement
     {
         get { return m_BlockMovement; }
-        set { m_BlockMovement = value; }
+        set
+        {
+            m_BlockMovement = value;
+            m_MouseLook.BlockLook = value;
+        }
     }
 }

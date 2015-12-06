@@ -9,6 +9,10 @@ TagManager:
   - BuildingPhaseView
   - PauseView
   - TowerMenuView
+  - WaveText
+  - ResourcesText
+  - CoreText
+  - ShooterPhaseView
   layers:
   - Default
   - TransparentFX

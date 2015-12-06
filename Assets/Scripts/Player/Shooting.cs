@@ -23,8 +23,10 @@ public class Shooting : MonoBehaviour
     private float _reloadTimeCounter;
     private float _shootingTimeCounter;
     private float _laserTimeCounter;
+    private float _flareTimeCounter;
     private Rect _crosshairPosition;
     private LineRenderer _line;
+    private Light _light;
 
 
     void Start()
@@ -39,6 +41,9 @@ public class Shooting : MonoBehaviour
         _currentAmmo = MaxAmmo - ClipSize;
         _line = GunTip.GetComponent<LineRenderer>();
         _line.enabled = false;
+        _light = GunTip.GetComponent<Light>();
+        _light.intensity = 0.0f;
+        _light.enabled = false;
 
         // GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
     }
@@ -75,15 +80,30 @@ public class Shooting : MonoBehaviour
         {
             _shootingTimeCounter += Time.deltaTime;
             _laserTimeCounter += Time.deltaTime;
+            _flareTimeCounter += Time.deltaTime;
+
             if (_laserTimeCounter > 0.1f)
             {
                 _line.enabled = false;
             }
+
+            if (_flareTimeCounter < 0.125f)
+            {
+                _light.intensity += 10.0f * Time.deltaTime;
+            }
+            else if(_flareTimeCounter > 0.125f && _flareTimeCounter < 0.25f)
+            {
+                _light.intensity -= 10.0f * Time.deltaTime;
+            }
+
             if (_shootingTimeCounter > 1.0f)
             {
                 _isShooting = false;
                 _shootingTimeCounter = 0.0f;
                 _laserTimeCounter = 0.0f;
+                _flareTimeCounter = 0.0f;
+                _light.intensity = 0.0f;
+                _light.enabled = false;
             }
         }
     }
@@ -95,6 +115,8 @@ public class Shooting : MonoBehaviour
             GetComponent<AudioSource>().clip = ShotSound;
             _isShooting = true;
             _line.enabled = true;
+            _light.enabled = true;
+            _light.intensity = 0.0f;
             _currentClip--;
             Ray ray = new Ray(GunTip.transform.position, GunTip.transform.forward);
             RaycastHit hit;
@@ -156,6 +178,7 @@ public class Shooting : MonoBehaviour
     private void EndFpsPhase()
     {
         _line.enabled = false;
+        _light.enabled = false;
         GetComponent<AudioSource>().Stop();
         GetComponent<AudioSource>().clip = null;
         _isShooting = false;
@@ -163,6 +186,7 @@ public class Shooting : MonoBehaviour
         _reloadTimeCounter = 0.0f;
         _shootingTimeCounter = 0.0f;
         _laserTimeCounter = 0.0f;
+        _flareTimeCounter = 0.0f;
     }
 
     void OnDisable()
