@@ -9,6 +9,7 @@ public class EnemyBehaviour : MonoBehaviour
     [Header("Materials")] 
     public Material BasicMaterial;
     public Material DamagedMaterial;
+
     private bool _wasDamaged;
     private float _timeAfterDamaged;
     private List<GameObject> _path;
@@ -63,8 +64,14 @@ public class EnemyBehaviour : MonoBehaviour
         _wasDamaged = true;
         if (HealthPoints <= 0)
         {
-            Destroy(gameObject);
+            DestroyEnemy();
         }
+    }
+
+    public void DestroyEnemy()
+    {
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateResources(AttackValue * 10);
+        Destroy(gameObject);
     }
 
     void OnTriggerEnter(Collider other)
@@ -78,8 +85,5 @@ public class EnemyBehaviour : MonoBehaviour
     void OnDestroy()
     {
         //TO DO: maybe creating some kind of particle emitter
-        //IMPORTANT!!!: something is not working with updateresources
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateResources(AttackValue * 10);
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().DecreaseEnemyCounter();
     }
 }

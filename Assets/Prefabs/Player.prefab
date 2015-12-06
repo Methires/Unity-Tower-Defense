@@ -76,6 +76,8 @@ GameObject:
   - 4: {fileID: 431936}
   - 20: {fileID: 2056064}
   - 81: {fileID: 8118106}
+  - 92: {fileID: 9243304}
+  - 124: {fileID: 12457568}
   m_Layer: 0
   m_Name: FirstPersonCharacter
   m_TagString: MainCamera
@@ -131,13 +133,14 @@ GameObject:
   - 54: {fileID: 5407242}
   - 82: {fileID: 8244768}
   - 114: {fileID: 11424962}
+  - 136: {fileID: 13624680}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &431936
 Transform:
   m_ObjectHideFlags: 1
@@ -564,6 +567,13 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+--- !u!92 &9243304
+Behaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167850}
+  m_Enabled: 1
 --- !u!95 &9527562
 Animator:
   serializedVersion: 3
@@ -668,6 +678,7 @@ MonoBehaviour:
   StaminaTexture2D: {fileID: 2800000, guid: 9ddf6e989538cef40937eff7899d8e7c, type: 3}
   MaxHealth: 100
   MaxStamina: 100
+  DeathTimePenalty: 2.5
 --- !u!114 &11457246
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -684,9 +695,9 @@ MonoBehaviour:
   ShotSound: {fileID: 8300000, guid: f6cb1f581b7444b23a05b613a16420d5, type: 3}
   ReloadSound: {fileID: 8300000, guid: 05a2a54859c80fa49bede53c0ae7479e, type: 3}
   NoAmmoSound: {fileID: 8300000, guid: 3535722c57175449695abd945d3df695, type: 3}
-  AttackValue: 15
+  AttackValue: 150
   MaxAmmo: 100
-  ClipSize: 15
+  ClipSize: 20
   Range: 50
   ReloadTime: 1
 --- !u!120 &12033866
@@ -726,6 +737,26 @@ LineRenderer:
       serializedVersion: 2
       rgba: 4294967295
   m_UseWorldSpace: 1
+--- !u!124 &12457568
+Behaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167850}
+  m_Enabled: 1
+--- !u!136 &13624680
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 196996}
+  m_Material: {fileID: 13400000, guid: 15671fcb474384f499ebcdb81e247520, type: 2}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: .5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: .0500000007, z: .25}
 --- !u!143 &14329638
 CharacterController:
   m_ObjectHideFlags: 1
@@ -738,7 +769,7 @@ CharacterController:
   serializedVersion: 2
   m_Height: 1.79999995
   m_Radius: .5
-  m_SlopeLimit: 45
+  m_SlopeLimit: 0
   m_StepOffset: .300000012
   m_SkinWidth: .0799999982
   m_MinMoveDistance: 0

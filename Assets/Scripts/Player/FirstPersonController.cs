@@ -35,6 +35,7 @@ public class FirstPersonController : MonoBehaviour
     private bool m_Jumping;
     private AudioSource m_AudioSource;
     private bool m_CanRun = true;
+    private bool m_BlockMovement = false;
 
     private void Start()
     {
@@ -52,7 +53,7 @@ public class FirstPersonController : MonoBehaviour
     private void Update()
     {
         RotateView();
-        if (!m_Jump)
+        if (!m_Jump && !m_BlockMovement)
         {
             m_Jump = Input.GetButtonDown("Jump");
         }
@@ -172,7 +173,7 @@ public class FirstPersonController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         m_IsWalking = !Input.GetButton("Sprint");
-        speed = m_IsWalking ? m_WalkSpeed : m_CanRun ? m_RunSpeed : m_WalkSpeed;
+        speed = m_BlockMovement ? 0.0f : m_IsWalking ? m_WalkSpeed : m_CanRun ? m_RunSpeed : m_WalkSpeed;
         m_Input = new Vector2(horizontal, vertical);
         if (m_Input.sqrMagnitude > 1)
         {
@@ -204,5 +205,11 @@ public class FirstPersonController : MonoBehaviour
     {
         get { return m_CanRun; }
         set { m_CanRun = value; }
+    }
+
+    public bool BlockMovement
+    {
+        get { return m_BlockMovement; }
+        set { m_BlockMovement = value; }
     }
 }

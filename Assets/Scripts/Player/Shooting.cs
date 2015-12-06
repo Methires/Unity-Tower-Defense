@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class Shooting : MonoBehaviour
@@ -10,7 +9,7 @@ public class Shooting : MonoBehaviour
     public AudioClip ShotSound;
     public AudioClip ReloadSound;
     public AudioClip NoAmmoSound;
-    [Header("Weapon Params")] 
+    [Header("Weapon Params")]
     public int AttackValue;
     public int MaxAmmo;
     public int ClipSize;
@@ -28,33 +27,33 @@ public class Shooting : MonoBehaviour
     private LineRenderer _line;
 
 
-	void Start ()
-	{
+    void Start()
+    {
         _isReloading = false;
         _reloadTimeCounter = 0.0f;
-        _crosshairPosition = new Rect((Screen.width - CrosshairTexture.width) / 2 , 
+        _crosshairPosition = new Rect((Screen.width - CrosshairTexture.width) / 2,
                              (Screen.height - CrosshairTexture.height) / 2,
-                             CrosshairTexture.width, 
+                             CrosshairTexture.width,
                              CrosshairTexture.height);
-	    _currentClip = ClipSize;
-	    _currentAmmo = MaxAmmo - ClipSize;
-	    _line = GunTip.GetComponent<LineRenderer>();
-	    _line.enabled = false;
-        
-	    // GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
-	}
+        _currentClip = ClipSize;
+        _currentAmmo = MaxAmmo - ClipSize;
+        _line = GunTip.GetComponent<LineRenderer>();
+        _line.enabled = false;
+
+        // GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
+    }
 
     void OnGUI()
     {
         GUI.DrawTexture(_crosshairPosition, CrosshairTexture);
     }
 
-    void Update () 
+    void Update()
     {
-	    if (Input.GetButtonDown("Fire1"))
-	    {
-	        Shoot();
-	    }
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Shoot();
+        }
 
         if (Input.GetButtonDown("Reload") && _currentClip != ClipSize)
         {
@@ -82,7 +81,7 @@ public class Shooting : MonoBehaviour
             }
             if (_shootingTimeCounter > 1.0f)
             {
-                _isShooting = false;            
+                _isShooting = false;
                 _shootingTimeCounter = 0.0f;
                 _laserTimeCounter = 0.0f;
             }
@@ -123,32 +122,51 @@ public class Shooting : MonoBehaviour
 
     private void Reload()
     {
-        GetComponent<AudioSource>().clip = ReloadSound;
-        if (_currentAmmo > 0 && !_isReloading)
+        if (!_isShooting)
         {
-            _isReloading = true;
-            if (_currentAmmo >= ClipSize)
+            GetComponent<AudioSource>().clip = ReloadSound;
+            if (_currentAmmo > 0 && !_isReloading)
             {
-                _currentAmmo -= ClipSize - _currentClip;
-                _currentClip = ClipSize;
+                _isReloading = true;
+                if (_currentAmmo >= ClipSize)
+                {
+                    _currentAmmo -= ClipSize - _currentClip;
+                    _currentClip = ClipSize;
+                }
+                else
+                {
+                    _currentClip = _currentAmmo;
+                    _currentAmmo = 0;
+                }
             }
             else
             {
-                _currentClip = _currentAmmo;
-                _currentAmmo = 0;
+                GetComponent<AudioSource>().clip = NoAmmoSound;
             }
             GetComponent<AudioSource>().Play();
         }
-        else
-        {
-            GetComponent<AudioSource>().clip = NoAmmoSound;
-            GetComponent<AudioSource>().Play();
-        }        
     }
 
     public void RenewAmmo()
     {
         _currentAmmo = MaxAmmo;
         //GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
+    }
+
+    private void EndFpsPhase()
+    {
+        _line.enabled = false;
+        GetComponent<AudioSource>().Stop();
+        GetComponent<AudioSource>().clip = null;
+        _isShooting = false;
+        _isReloading = false;
+        _reloadTimeCounter = 0.0f;
+        _shootingTimeCounter = 0.0f;
+        _laserTimeCounter = 0.0f;
+    }
+
+    void OnDisable()
+    {
+        EndFpsPhase();
     }
 }

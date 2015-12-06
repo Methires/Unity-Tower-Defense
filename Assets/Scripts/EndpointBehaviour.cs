@@ -3,6 +3,7 @@
 public class EndpointBehaviour : MonoBehaviour
 {
     public int MaxHealth;
+
     private int _currentHealth;
 
     void Start()
@@ -16,21 +17,19 @@ public class EndpointBehaviour : MonoBehaviour
         if (other.tag == "Enemy")
         {
             DealDamage(other.GetComponent<EnemyBehaviour>().DealDamage());
-            Destroy(other.gameObject);
+            other.GetComponent<EnemyBehaviour>().DestroyEnemy();
         }
         else if (other.tag == "Player")
         {
             other.GetComponent<PlayerStats>().IncreaseHealth(other.GetComponent<PlayerStats>().MaxHealth);
+            other.GetComponent<PlayerStats>().Shooting.RenewAmmo();
         }
     }
 
     private void DealDamage(int value)
     {
         _currentHealth -= value;
-        if (_currentHealth <= 0)
-        {
-            _currentHealth = 0;
-        }
+        _currentHealth = Mathf.Clamp(_currentHealth, 0, MaxHealth);
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateCoreLife(_currentHealth, MaxHealth);
         if (_currentHealth == 0)
         {
