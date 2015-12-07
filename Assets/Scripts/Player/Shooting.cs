@@ -44,8 +44,7 @@ public class Shooting : MonoBehaviour
         _light = GunTip.GetComponent<Light>();
         _light.intensity = 0.0f;
         _light.enabled = false;
-
-        // GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
+        UpdateAmmoText();
     }
 
     void OnGUI()
@@ -72,7 +71,7 @@ public class Shooting : MonoBehaviour
             {
                 _isReloading = false;
                 _reloadTimeCounter = 0.0f;
-                //GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
+                UpdateAmmoText();
             }
         }
 
@@ -118,6 +117,7 @@ public class Shooting : MonoBehaviour
             _light.enabled = true;
             _light.intensity = 0.0f;
             _currentClip--;
+            UpdateAmmoText();
             Ray ray = new Ray(GunTip.transform.position, GunTip.transform.forward);
             RaycastHit hit;
             _line.SetPosition(0, ray.origin);
@@ -134,7 +134,6 @@ public class Shooting : MonoBehaviour
                 _line.SetPosition(1, ray.GetPoint(Range));
             }
             GetComponent<AudioSource>().Play();
-            //GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
         }
         else if (_currentClip == 0 && !_isShooting)
         {
@@ -172,7 +171,12 @@ public class Shooting : MonoBehaviour
     public void RenewAmmo()
     {
         _currentAmmo = MaxAmmo;
-        //GetComponent<GUIText>().text = "Clip: " + _currentClip + " | Ammo: " + _currentAmmo;
+        UpdateAmmoText();
+    }
+
+    private void UpdateAmmoText()
+    {
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateAmmoOnShooterUi(_currentClip, _currentAmmo);
     }
 
     private void EndFpsPhase()
@@ -187,6 +191,7 @@ public class Shooting : MonoBehaviour
         _shootingTimeCounter = 0.0f;
         _laserTimeCounter = 0.0f;
         _flareTimeCounter = 0.0f;
+        UpdateAmmoText();
     }
 
     void OnDisable()

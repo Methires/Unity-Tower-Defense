@@ -5,6 +5,7 @@ public class AoeTowerBehaviour : MonoBehaviour
 {
     public int AttackValue;
     public float AttackInterval;
+    public GameObject ParticleOnAttack;
 
     private float _attackTimeCouter;
     private bool _attackPhase;
@@ -26,7 +27,7 @@ public class AoeTowerBehaviour : MonoBehaviour
                 ValidateList();
                 foreach (var enemy in _currentEnemiesInProximity)
                 {
-                    //TODO: Spawn particles
+                    Instantiate(ParticleOnAttack, enemy.transform.position, Quaternion.identity);
                     enemy.GetComponent<EnemyBehaviour>().ReceiveDamage(AttackValue);
                 }
                 _attackTimeCouter = 0.0f;

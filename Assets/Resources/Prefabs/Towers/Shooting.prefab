@@ -166,6 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackValue: 50
   AttackInterval: 4.5
+  Bullet: {fileID: 189114, guid: 48320a7d3fb35c841849b425b84766c8, type: 2}
 --- !u!135 &13562776
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -239,6 +240,10 @@ Prefab:
       propertyPath: m_Layer
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: Bullet
+      value: 
+      objectReference: {fileID: 189114, guid: 48320a7d3fb35c841849b425b84766c8, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 181816}

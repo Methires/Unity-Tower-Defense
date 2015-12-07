@@ -194,6 +194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackValue: 100
   AttackInterval: 7.5
+  ParticleOnAttack: {fileID: 139522, guid: 152296ed25cfbe64cbbcdf4c04619303, type: 2}
 --- !u!135 &13574712
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -259,6 +260,10 @@ Prefab:
       propertyPath: m_Layer
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: ParticleOnAttack
+      value: 
+      objectReference: {fileID: 139522, guid: 152296ed25cfbe64cbbcdf4c04619303, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 199758}

@@ -6,6 +6,7 @@ public class EnemyBehaviour : MonoBehaviour
     public float Speed;
     public int HealthPoints;
     public int AttackValue;
+    public GameObject ParticleOnDeath;
     [Header("Materials")] 
     public Material BasicMaterial;
     public Material DamagedMaterial;
@@ -64,6 +65,7 @@ public class EnemyBehaviour : MonoBehaviour
         _wasDamaged = true;
         if (HealthPoints <= 0)
         {
+            Instantiate(ParticleOnDeath, transform.position, Quaternion.identity);
             DestroyEnemy();
         }
     }
@@ -80,10 +82,5 @@ public class EnemyBehaviour : MonoBehaviour
         {
             other.GetComponent<PlayerStats>().DecreaseHealth(AttackValue);
         }
-    }
-
-    void OnDestroy()
-    {
-        //TODO: maybe creating some kind of particle emitter
     }
 }

@@ -484,6 +484,11 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void UpdateAmmoOnShooterUi(int currentAmmo, int maxAmmo)
+    {
+        _uiShooterPhase.transform.GetChild(0).GetComponent<Text>().text = "Ammo: " + currentAmmo + "/" + maxAmmo;
+    }
+
     public void Exit()
     {
         //TO DO: return to main menu
