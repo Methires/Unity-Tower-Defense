@@ -12,7 +12,7 @@ GameObject:
   - 199: {fileID: 19996570}
   - 114: {fileID: 11456816}
   m_Layer: 0
-  m_Name: Ending Particle
+  m_Name: Enemy Death
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

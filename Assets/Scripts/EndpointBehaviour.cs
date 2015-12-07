@@ -29,7 +29,7 @@ public class EndpointBehaviour : MonoBehaviour
 
     private void DealDamage(int value)
     {
-        Instantiate(ParticleOnDamage, transform.position, Quaternion.identity);
+        Instantiate(ParticleOnDamage, transform.position, Quaternion.Euler(0.0f,0.0f,0.0f));
         _currentHealth -= value;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, MaxHealth);
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().UpdateCoreLife(_currentHealth, MaxHealth);
