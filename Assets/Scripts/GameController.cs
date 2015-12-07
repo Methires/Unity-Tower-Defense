@@ -122,6 +122,7 @@ public class GameController : MonoBehaviour
                 if (_hasSpawnedAllEnemies)
                 {
                     var enemies = GameObject.FindGameObjectsWithTag("Enemy");
+                    Debug.Log(enemies.Length);
                     if (enemies.Length == 0)
                     {
                         _fpsPhaseEndCounter += Time.deltaTime;

@@ -24,9 +24,10 @@ public class NanobotBehaviour : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy")
+        if (other.tag == "Enemy" && other.gameObject == _target.gameObject)
         {
             other.GetComponent<EnemyBehaviour>().ReceiveDamage(_attackValue);
+            Destroy(gameObject);
         }
     }
 
