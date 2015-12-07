@@ -57,6 +57,7 @@ public class BuildTower : MonoBehaviour
         }
         GameObject tower = Instantiate(tempGameObject, parent.transform.position, Quaternion.identity) as GameObject;
         tower.transform.parent = parent.transform;
+        tower.transform.localPosition = new Vector3(tower.transform.localPosition.x, -(2.0f/parent.transform.localScale.y), tower.transform.localPosition.z);
         
         return tempTower.Cost;
     }

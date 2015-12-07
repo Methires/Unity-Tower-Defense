@@ -25,7 +25,7 @@ public class ShootingTowerBehaviour : MonoBehaviour
             ValidateList();
             if (_currentEnemiesInProximity.Count != 0 && _currentEnemiesInProximity[0] != null)
             {
-                Vector3 direction = _currentEnemiesInProximity[0].transform.position - transform.position;
+                Vector3 direction = new Vector3(_currentEnemiesInProximity[0].transform.position.x - transform.position.x, 0.0f, _currentEnemiesInProximity[0].transform.position.z - transform.position.z);
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction),
                     720.0f*Time.deltaTime);
                 if (_attackTimeCouter > AttackInterval)
