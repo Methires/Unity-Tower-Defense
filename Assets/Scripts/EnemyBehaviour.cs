@@ -65,7 +65,8 @@ public class EnemyBehaviour : MonoBehaviour
         _wasDamaged = true;
         if (HealthPoints <= 0)
         {
-            Instantiate(ParticleOnDeath, transform.position, Quaternion.identity);
+            var particlePosition = new Vector3(transform.position.x, 0.0f, transform.position.z);
+            Instantiate(ParticleOnDeath, particlePosition, Quaternion.identity);
             DestroyEnemy();
         }
     }

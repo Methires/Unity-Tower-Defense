@@ -27,7 +27,8 @@ public class AoeTowerBehaviour : MonoBehaviour
                 ValidateList();
                 foreach (var enemy in _currentEnemiesInProximity)
                 {
-                    Instantiate(ParticleOnAttack, enemy.transform.position, Quaternion.identity);
+                    var particlePosition = new Vector3(enemy.transform.position.x, 0.0f, enemy.transform.position.z);
+                    Instantiate(ParticleOnAttack, particlePosition, Quaternion.identity);
                     enemy.GetComponent<EnemyBehaviour>().ReceiveDamage(AttackValue);
                 }
                 _attackTimeCouter = 0.0f;

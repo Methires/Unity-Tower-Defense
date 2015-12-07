@@ -56,10 +56,8 @@ public class BuildTower : MonoBehaviour
                     break;
         }
         GameObject tower = Instantiate(tempGameObject, parent.transform.position, Quaternion.identity) as GameObject;
-        if (tower != null)
-        {
-            tower.transform.parent = parent.transform;
-        }
+        tower.transform.parent = parent.transform;
+        
         return tempTower.Cost;
     }
 
@@ -79,6 +77,7 @@ public class BuildTower : MonoBehaviour
             tempTower = AoeTower;
         }
         Destroy(tower.gameObject);
+
         return tempTower.Cost;
     }
 }

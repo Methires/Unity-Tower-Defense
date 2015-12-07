@@ -14,7 +14,7 @@ public class NanobotBehaviour : MonoBehaviour
 	    if (_target != null)
 	    {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_target.transform.position - transform.position), 720.0f * Time.deltaTime);
-	        transform.position = Vector3.Lerp(transform.position, _target.transform.position, 1.5f * Time.deltaTime);
+	        transform.position = Vector3.Lerp(transform.position, _target.transform.position, 2.5f * Time.deltaTime);
 	    }
 	    else
 	    {
@@ -24,7 +24,7 @@ public class NanobotBehaviour : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy" && other.gameObject == _target.gameObject)
+        if (other.tag == "Enemy")
         {
             other.GetComponent<EnemyBehaviour>().ReceiveDamage(_attackValue);
             Destroy(gameObject);

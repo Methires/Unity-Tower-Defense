@@ -30,7 +30,8 @@ public class ShootingTowerBehaviour : MonoBehaviour
                     720.0f*Time.deltaTime);
                 if (_attackTimeCouter > AttackInterval)
                 {
-                    GameObject bullet = Instantiate(Bullet, transform.position, Quaternion.identity) as GameObject;
+                    var bulletPosition = new Vector3(transform.position.x, 11.0f, transform.position.z);
+                    GameObject bullet = Instantiate(Bullet, bulletPosition, Quaternion.identity) as GameObject;
                     bullet.GetComponent<NanobotBehaviour>().AcquireTarget(_currentEnemiesInProximity[0], AttackValue);
                    _attackTimeCouter = 0.0f;
                 }
