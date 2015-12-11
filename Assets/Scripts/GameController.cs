@@ -491,6 +491,6 @@ public class GameController : MonoBehaviour
 
     public void Exit()
     {
-        //TO DO: return to main menu
+        Application.LoadLevel("MainMenu");
     }
 }
