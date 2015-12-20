@@ -105,39 +105,38 @@ public class MainMenu : MonoBehaviour
         {
             case "Gun":
                 _textMenuUi.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text
-                    = "Laser Gun";
+                    = "Cyberknife";
                 textFile = Resources.Load("Texts/Defences/Gun") as TextAsset;
-                Debug.Log(_textMenuUi.transform.GetChild(1).transform.GetChild(0).name);
                 _textMenuUi.transform.GetChild(1).transform.GetChild(0).GetComponent<Text>().text = textFile.text;
                      
                 break;
             case "Shoot":
                 _textMenuUi.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text
-                    = "Nanobots";
+                    = "Nanotechnologia";
                 textFile = Resources.Load("Texts/Defences/Shoot") as TextAsset;
                 _textMenuUi.transform.GetChild(1).transform.GetChild(0).GetComponent<Text>().text = textFile.text;
                 break;
             case "AOE":
                 _textMenuUi.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text
-                    = "Chemotheraphy AOE";
+                    = "Chemioterapia";
                 textFile = Resources.Load("Texts/Defences/AOE") as TextAsset;
                 _textMenuUi.transform.GetChild(1).transform.GetChild(0).GetComponent<Text>().text = textFile.text;
                 break;
             case "Type1":
                 _textMenuUi.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text
-                    = "Cancer cell 1";
+                    = "Rak nerki";
                 textFile = Resources.Load("Texts/Enemies/Type1") as TextAsset;
                 _textMenuUi.transform.GetChild(1).transform.GetChild(0).GetComponent<Text>().text = textFile.text;
                 break;
             case "Type2":
                 _textMenuUi.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text
-                    = "Cancer cell 2";
+                    = "Rak pluc";
                 textFile = Resources.Load("Texts/Enemies/Type2") as TextAsset;
                 _textMenuUi.transform.GetChild(1).transform.GetChild(0).GetComponent<Text>().text = textFile.text;
                 break;
             case "Type3":
                 _textMenuUi.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text
-                    = "Cancer cell 3";
+                    = "Chloniaki nieziarnicze ";
                 textFile = Resources.Load("Texts/Enemies/Type3") as TextAsset;
                 _textMenuUi.transform.GetChild(1).transform.GetChild(0).GetComponent<Text>().text = textFile.text;
                 break;

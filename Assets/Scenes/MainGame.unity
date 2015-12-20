@@ -349,73 +349,6 @@ RectTransform:
   m_AnchoredPosition: {x: -100, y: 35}
   m_SizeDelta: {x: 170, y: 50}
   m_Pivot: {x: .5, y: .5}
---- !u!1 &213446942
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 213446945}
-  - 222: {fileID: 213446944}
-  - 114: {fileID: 213446943}
-  m_Layer: 5
-  m_Name: Box
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &213446943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 213446942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 1f1d5baae1d26404a8a639a07e5c7766, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &213446944
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 213446942}
---- !u!224 &213446945
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 213446942}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1792438641}
-  m_RootOrder: 1
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -120, y: 37.5}
-  m_SizeDelta: {x: 250, y: 80}
-  m_Pivot: {x: .5, y: .5}
 --- !u!1 &376450486
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,8 +380,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -105, y: -27.5}
-  m_SizeDelta: {x: 200, y: 55}
+  m_AnchoredPosition: {x: -119, y: -27.5}
+  m_SizeDelta: {x: 225, y: 55}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &376450488
 MonoBehaviour:
@@ -481,7 +414,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Core: XXX'
+  m_Text: 'Rdzen: XXX'
 --- !u!222 &376450489
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -553,7 +486,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: DESTROY TOWER
+  m_Text: Zniszcz wieze
 --- !u!222 &397082944
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -909,7 +842,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Wave: XXX'
+  m_Text: 'Fala: XXX'
 --- !u!222 &548141328
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -964,7 +897,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: EXIT
+  m_Text: Wyjdz do menu
 --- !u!222 &584870365
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1053,7 +986,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: START WAVE
+  m_Text: Zacznij nowa fale
 --- !u!222 &602223878
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1125,7 +1058,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RESUME
+  m_Text: Wznow gre
 --- !u!222 &626563137
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1472,7 +1405,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: BUILD
+  m_Text: Menu budowania
 --- !u!222 &755792768
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1544,7 +1477,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'RESTART
+  m_Text: 'Restartuj gre
 
 '
 --- !u!222 &756984694
@@ -1955,8 +1888,8 @@ MonoBehaviour:
     m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: BUILD SHOOTER
+    m_LineSpacing: .800000012
+  m_Text: Zbuduj wieze strzelajaca
 --- !u!222 &995045717
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2214,7 +2147,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Resources: XXX'
+  m_Text: 'Zasoby: XXX'
 --- !u!222 &1126962079
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2810,7 +2743,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: BUILD WALL
+  m_Text: Zbuduj sciane
 --- !u!222 &1742365722
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2881,8 +2814,8 @@ MonoBehaviour:
     m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: BUILD AOE
+    m_LineSpacing: .800000012
+  m_Text: Zbuduj wieze obszarowa
 --- !u!222 &1742731369
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2977,7 +2910,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 2089160088}
-  - {fileID: 213446945}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_AnchorMin: {x: 0, y: 0}
@@ -3399,7 +3331,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RETURN
+  m_Text: Powrot
 --- !u!222 &2077469019
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3471,7 +3403,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Ammo: XXX / XXX'
+  m_Text: 'Amunicja: XXX / XXX'
 --- !u!222 &2089160090
 CanvasRenderer:
   m_ObjectHideFlags: 0

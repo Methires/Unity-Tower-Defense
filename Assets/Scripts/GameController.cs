@@ -145,23 +145,15 @@ public class GameController : MonoBehaviour
         {
             case 'W':
                 _currentTile.x = _currentTile.x + 1;
-                _currentTile.y = _currentTile.y;
                 break;
             case 'S':
                 _currentTile.x = _currentTile.x - 1;
-                _currentTile.y = _currentTile.y;
                 break;
             case 'A':
-                _currentTile.x = _currentTile.x;
                 _currentTile.y = _currentTile.y - 1;
                 break;
             case 'D':
-                _currentTile.x = _currentTile.x;
                 _currentTile.y = _currentTile.y + 1;
-                break;
-            default:
-                _currentTile.x = _currentTile.x;
-                _currentTile.y = _currentTile.y;
                 break;
         }
         ApplyMaterialOnTiles();
@@ -170,19 +162,19 @@ public class GameController : MonoBehaviour
     public void UpdateResources(int value)
     {
         _resources += value;
-        _uiBothPhases.transform.GetChild(0).GetComponent<Text>().text = "Resources: " + _resources;
+        _uiBothPhases.transform.GetChild(0).GetComponent<Text>().text = "Zasoby: " + _resources;
     }
 
     public void IncreaseWave()
     {
         _waveNumber++;
-        _uiBothPhases.transform.GetChild(1).GetComponent<Text>().text = "Wave: " + _waveNumber;
+        _uiBothPhases.transform.GetChild(1).GetComponent<Text>().text = "Fala: " + _waveNumber;
     }
 
     public void UpdateCoreLife(float currentHealthPoints, float maxHealthPoints)
     {
         var temp = Mathf.Round(currentHealthPoints/maxHealthPoints * 100.0f);
-       _uiBothPhases.transform.GetChild(2).GetComponent<Text>().text = "Core: " + temp;
+       _uiBothPhases.transform.GetChild(2).GetComponent<Text>().text = "Rdzen: " + temp;
     }
 
     public void GameOver()
@@ -486,7 +478,7 @@ public class GameController : MonoBehaviour
 
     public void UpdateAmmoOnShooterUi(int currentAmmo, int maxAmmo)
     {
-        _uiShooterPhase.transform.GetChild(0).GetComponent<Text>().text = "Ammo: " + currentAmmo + "/" + maxAmmo;
+        _uiShooterPhase.transform.GetChild(0).GetComponent<Text>().text = "Amunicja: " + currentAmmo + "/" + maxAmmo;
     }
 
     public void Exit()
