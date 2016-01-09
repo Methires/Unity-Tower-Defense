@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Klasa odpowiadająca za wyznaczanie współrzędnych potrzebnych do wykonania animacji, której celem jest imitacja ruch głowy. Pochodzi z elementów wchodzących w skład silnika Unity.
+/// </summary>
 [Serializable]
 public class CurveControlledBob
 {

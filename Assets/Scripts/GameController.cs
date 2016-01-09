@@ -2,30 +2,97 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Klasa dziedzicząca po klasie MonoBehaviour. Odpowiada za kontrolę całej pętli gry podczas rozgrywki w części rozgrywkowej.
+/// </summary>
 public class GameController : MonoBehaviour
 {
+    /// <summary>
+    /// Zmienna określająca początkową liczbę zasobów gracza.
+    /// </summary>
     public int StartingResources;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt z kamerą z której widoczny będzie obraz w trakcie trwania fazy przygotowania.
+    /// </summary>
     public GameObject BuildingCamera;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt z kamerą z której widoczny będzie obraz w trakcie trwania fazy obrony.
+    /// </summary>
     public GameObject Player;
 
+    /// <summary>
+    /// Zmienna określającą obecną liczbę zasobów gracza.
+    /// </summary>
     private int _resources;
+    /// <summary>
+    /// Zmienna przechowującą indeks kolumny z siatki dwuwymiarowej w której znajduje się punkt startowy.
+    /// </summary>
     private int _startingPoint;
+    /// <summary>
+    /// Zmienna przechowującą indeks kolumny z siatki dwuwymiarowej w której znajduje się punkt końcowy.
+    /// </summary>
     private int _endingPoint;
+    /// <summary>
+    /// Zmienna określająca obecny numer fali.
+    /// </summary>
     private int _waveNumber;
+    /// <summary>
+    /// Zmienna będąca licznikiem odliczającym koniec fazy obrony po zniszczeniu wszystkich przeciwników.
+    /// </summary>
     private float _fpsPhaseEndCounter;
+    /// <summary>
+    /// Zmienna logiczna określająca czy obecnie trwa faza przygotowań.
+    /// </summary>
     private bool _isBuildingPhase;
+    /// <summary>
+    /// Zmienna logiczna określająca czy wszyscy przeciwnicy z obecnej fali pojawi się na scenie.
+    /// </summary>
     private bool _hasSpawnedAllEnemies;
+    /// <summary>
+    /// Zmienna logiczna określająca czy widoczne jest menu budowania wieży.
+    /// </summary>
     private bool _isTowerMenuOpen;
+    /// <summary>
+    /// Zmienna logiczna określająca czy widoczne jest menu pauzy.
+    /// </summary>
     private bool _isPauseMenuOpen;
+    /// <summary>
+    /// Zmienna logiczna określająca czy rozgrywka została zakończona.
+    /// </summary>
     private bool _isGameOver;
+    /// <summary>
+    /// Zmienna przechowująca indeksy obecnie wybranego elementu siatki dwuwymiarowej.
+    /// </summary>
     private Vector2 _currentTile;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt z widokiem widocznym w trakcie dwóch faz.
+    /// </summary>
     private GameObject _uiBothPhases;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt z widokiem widocznym podczas fazy przygotowań.
+    /// </summary>
     private GameObject _uiBuildingPhase;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt z memu pauzy.
+    /// </summary>
     private GameObject _uiPauseMenu;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt z menu budowania wieży.
+    /// </summary>
     private GameObject _uiTowerMenu;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt z widokiem widocznym podczas fazy obrony.
+    /// </summary>
     private GameObject _uiShooterPhase;
+    /// <summary>
+    /// Zmienna przechowująca dwuwymiarową tablicę referencji na obiekty wchodzące w skład siatki dwuwymiarowej.
+    /// </summary>
     private GameObject[,] _tiles;
-
+	
+    /// <summary>
+	/// Metoda wywoływana po załadowaniu sceny na której znaduję się obiekt.
+    /// Szuka obiektów zawierających każde z menu i widoków, a następnie przypisuje je do odpowiednich zmiennych klasy.
+    /// </summary>
     void Awake()
     {
         _uiBothPhases = GameObject.FindWithTag("BothPhasesView");
@@ -34,7 +101,11 @@ public class GameController : MonoBehaviour
         _uiTowerMenu = GameObject.FindGameObjectWithTag("TowerMenuView");
         _uiShooterPhase = GameObject.FindGameObjectWithTag("ShooterPhaseView");
     }
-
+	
+    /// <summary>
+    /// Metoda wywoływana tylko raz przy pierwszej klatce w której skrypt jest aktywny.
+	/// Ustawia wszystkie zmienne tak, aby możliwie było rozpoczęcie fazy przygotowania dla pierwszej fali.
+    /// </summary>
     void Start ()
 	{
         UpdateResources(StartingResources);
@@ -54,6 +125,10 @@ public class GameController : MonoBehaviour
         OpenTowerMenuUi(false);
 	}
 	
+	/// <summary>
+	/// Metoda wywoływana co klatkę, gdy skrypt jest aktywny.
+	/// Sprawdza czy klawisz naciśniety przez gracza powinien wywołać jakąś metodę i w takim przypadku wywołuje ją.
+	/// </summary>
 	void Update ()
     {
         if (!_isGameOver)
@@ -77,7 +152,7 @@ public class GameController : MonoBehaviour
             {
                 if (!_isTowerMenuOpen && !_isPauseMenuOpen)
                 {
-                    if (Input.GetKeyDown(KeyCode.W))
+                    if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
                     {
                         if (_currentTile.x < FindObjectOfType<SpawnTiles>().Lenght - 1)
                         {
@@ -85,7 +160,7 @@ public class GameController : MonoBehaviour
                         }
                     }
 
-                    if (Input.GetKeyDown(KeyCode.S))
+                    if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
                     {
                         if (_currentTile.x > 0)
                         {
@@ -93,7 +168,7 @@ public class GameController : MonoBehaviour
                         }
                     }
 
-                    if (Input.GetKeyDown(KeyCode.A))
+                    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
                     {
                         if (_currentTile.y > 0)
                         {
@@ -101,7 +176,7 @@ public class GameController : MonoBehaviour
                         }
                     }
 
-                    if (Input.GetKeyDown(KeyCode.D))
+                    if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
                     {
                         if (_currentTile.y < FindObjectOfType<SpawnTiles>().Width - 1)
                         {
@@ -138,7 +213,11 @@ public class GameController : MonoBehaviour
             OpenPauseMenuUi(true);
         }
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za zmianę obecnie wybranego przez gracza elementu siatki dwuwymiarowej.
+    /// </summary>
+    /// <param name="pressedKey">Argument typu char na podstawie, którego określany jest nowy wybrany element.</param>
     private void ChangeHighlightedTile(char pressedKey)
     {
         switch (pressedKey)
@@ -158,49 +237,85 @@ public class GameController : MonoBehaviour
         }
         ApplyMaterialOnTiles();
     }
-
+    
+	/// <summary>
+    /// Metoda zmieniająca wartość zasobów gracza o wartość value i aktualizująca tej informacji na ekranie.
+    /// </summary>
+    /// <param name="value">Argument typu int określający o ile musi zostać zwiększona liczba zasobów.</param>
     public void UpdateResources(int value)
     {
         _resources += value;
         _uiBothPhases.transform.GetChild(0).GetComponent<Text>().text = "Zasoby: " + _resources;
     }
-
+    
+	/// <summary>
+    /// Metoda odpowiedzialna za zwiększenie numeru obecnej fali.
+    /// </summary>
     public void IncreaseWave()
     {
-        _waveNumber++;
-        _uiBothPhases.transform.GetChild(1).GetComponent<Text>().text = "Fala: " + _waveNumber;
+	    if (_waveNumber == 10)
+	    {
+            GameOver();
+	    }
+	    else
+	    {
+	        _waveNumber++;
+	        _uiBothPhases.transform.GetChild(1).GetComponent<Text>().text = "Fala: " + _waveNumber;
+	    }
     }
-
+    
+	/// <summary>
+    /// Metoda odpowiedzialna za obliczanie procentowej reprezentacji punktów życia punktu końcowego i aktualizacji tej informacji na ekranie.
+    /// </summary>
+    /// <param name="currentHealthPoints">Argument typu float określający obecną liczbę punktów życia punktu końcowego.</param>
+    /// <param name="maxHealthPoints">Argument typu float określający maksymalną liczbę punktów życia punktu końcowego.</param>
     public void UpdateCoreLife(float currentHealthPoints, float maxHealthPoints)
     {
         var temp = Mathf.Round(currentHealthPoints/maxHealthPoints * 100.0f);
        _uiBothPhases.transform.GetChild(2).GetComponent<Text>().text = "Rdzen: " + temp;
     }
-
+    
+	/// <summary>
+    /// Metoda odpowiedzialna akcje wywoływane na zakończenie gry.
+    /// </summary>
     public void GameOver()
     {
         _isGameOver = true;
         BlockPlayer(false);
     }
-
+    
+	/// <summary>
+    /// Metoda odpowiedzialna za blokowanie i odblokowywanie możliwości ruchu, obrotu i strzelania gracza oraz jego interfejs podczas fazy obrony.
+    /// </summary>
+    /// <param name="unblock">Argument typu bool, który określa czy zablokować gracza, gdy unblock = false albo odblokować, gdy unblock = true.</param>
     private void BlockPlayer(bool unblock)
     {
         Player.GetComponent<FirstPersonController>().BlockMovement = !unblock;
         Player.GetComponent<PlayerStats>().enabled = unblock;
         Player.GetComponent<PlayerStats>().Shooting.enabled = unblock;
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za ukrywanie i pokazywanie kursora myszy.
+    /// </summary>
+    /// <param name="show">Argument typu bool, który określa czy kursor myszy ma być widoczny, gdy show = true albo niewidoczny, gdy show = false.</param>
     private void ShowCursor(bool show)
     {
         Cursor.visible = show;
         Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za przeładowanie gry celem jej ponownego rozpoczęcia.
+    /// </summary>
     public void Restart()
     {
         Application.LoadLevel(Application.loadedLevel);
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna na przypisywanie odpowiedniego materiału do wszystkich elementów z których składa się siatka dwuwymiarowa.
+    /// </summary>
     private void ApplyMaterialOnTiles()
     {
         foreach (var tile in _tiles)
@@ -214,7 +329,11 @@ public class GameController : MonoBehaviour
         }
         _tiles[(int)_currentTile.x, (int)_currentTile.y].GetComponent<Renderer>().material = Resources.Load("Materials/Tile/Highlighted") as Material;
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za rozpoczęcie fazy obrony dla obecnej fali przeciwników.
+    /// </summary>
+    /// <returns>IEnumerator pozwalający na wykorzystanie mechanizmu yield.</returns>
     private IEnumerator BeginWave()
     {
         int enemiesCount = 3 * _waveNumber;
@@ -237,7 +356,10 @@ public class GameController : MonoBehaviour
         }
         _hasSpawnedAllEnemies = true;
     }
-
+	
+    /// <summary>
+    /// Metoda kończąca fazę obrony dla obecnej fali przeciwników.
+    /// </summary>
     private void EndWave()
     {
         _isBuildingPhase = true;
@@ -254,13 +376,21 @@ public class GameController : MonoBehaviour
         BlockPlayer(true);
         ShowCursor(true);
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna na aktywację obiektu, który posiada komponent kamery przez którą gracz będzie widział rozgrywkę w zależności o fazy.
+    /// </summary>
+    /// <param name="isBuildingPhase">Argument typu bool, który określa czy obecnie rozpocznie się faza przygotowania, gdy isBuildingPhase = true albo faza obrony, 
+	/// gdy isBuildingPhase = false </param>
     private void ChangeMainCamera(bool isBuildingPhase)
     {
         Player.SetActive(!isBuildingPhase);
         BuildingCamera.SetActive(isBuildingPhase);
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za dodanie nowego przeciwnika na scenę.
+    /// </summary>
     private void SpawnEnemy()
     {
         float temp = Random.Range(0.0f, 10.0f);
@@ -277,36 +407,57 @@ public class GameController : MonoBehaviour
             Instantiate(Resources.Load("Prefabs/Enemies/Type3"), _tiles[0, _startingPoint].transform.position, Quaternion.identity);
         }
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiadająca za wywołanie odpowiednej metody w skrypcie BuildTower tworzącej wieżę typu ściana.
+    /// </summary>
     private void SpawnWallTower()
     {
         UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Wall, _tiles[(int)_currentTile.x, (int)_currentTile.y]));
         ApplyMaterialOnTiles();
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiadająca za wywołanie odpowiednej metody w skrypcie BuildTower tworzącej wieżę strzelającą.
+    /// </summary>
     private void SpawnShootingTower()
     {
         UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Shooting, _tiles[(int) _currentTile.x, (int) _currentTile.y]));
         ApplyMaterialOnTiles();
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiadająca za wywołanie odpowiednej metody w skrypcie BuildTower tworzącej wieżę obszarową.
+    /// </summary>
     private void SpawnAoeTower()
     {
         UpdateResources(-FindObjectOfType<BuildTower>().SpawnTower(BuildTower.TowerType.Aoe, _tiles[(int) _currentTile.x, (int) _currentTile.y]));
         ApplyMaterialOnTiles();
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiadająca za wywołanie odpowiednej metody w skrypcie BuildTower usuwającej wieżę z obecniej wybranego elementu siatki dwuwymiarowej.
+    /// </summary>
     private void DestroyTower()
     {
         UpdateResources(FindObjectOfType<BuildTower>().DestroyTower(_tiles[(int) _currentTile.x, (int) _currentTile.y].transform.GetChild(0).gameObject));
         ApplyMaterialOnTiles();
     }
-
+	
+    /// <summary>
+    /// Metoda określająca czy na obecnie wybranym elemencie siatki dwuwymiarowej można utowrzyć jakąkolwiek wieżę. 
+    /// </summary>
+    /// <returns>Zwraca wartość bool = true, gdy na obecnie wybranym elemencie siatki dwuwymiarowej można utowrzyć wieżę
+	///	albo false, gdy na obecnie wybranym elemencie siatki dwuwymiarowej nie można utworzyć wieży.</returns>
     private bool CanBuildTower()
     {
         return ((_currentTile.x != 0 || _currentTile.y != _startingPoint) && (_currentTile.x != FindObjectOfType<SpawnTiles>().Lenght - 1 || _currentTile.y != _endingPoint));
     }
-
+	
+    /// <summary>
+    /// Metoda sprawdzająca czy obecnie wybrany element siatki dwuwymiarowej jest rodzicem.
+    /// </summary>
+    /// <returns>Zwraca wartość bool = true, gdy obecnie wybrany element siatki dwuwymiarowej jest rodzicem albo false, gdy obecnie wybrany element siatki dwuwymiarowej nie jest rodzicem.</returns>
     private bool HasChildObjects()
     {
         if (_tiles[(int) _currentTile.x, (int) _currentTile.y].transform.childCount != 0)
@@ -315,7 +466,12 @@ public class GameController : MonoBehaviour
         }
         return false;
     }
-
+	
+    /// <summary>
+    /// Metoda sprawdzająca czy gracz posiada odpowiednią liczbę zasobów potrzebną do wybudowania danej wieży.
+    /// </summary>
+    /// <param name="type">Argument typu BuildTower.TowerType określający, który koszt wieży ma zostać sprawdzony.</param>
+    /// <returns>Zwraca wartość bool = true, gdy gracz posiada wystarczającą liczbę zasobów albo false, gdy gracz nie posida wystarczającej liczby zasobów.</returns>
     private bool HasEnoughResources(BuildTower.TowerType type)
     {
         int temp = 0;
@@ -333,7 +489,11 @@ public class GameController : MonoBehaviour
         }
         return _resources - temp >= 0;
     }
-
+	
+    /// <summary>
+    /// Metoda określająca stan aktywności wszystkich wież obecnych na scenie.
+    /// </summary>
+    /// <param name="value">Argument typu bool określający, czy wieże mają być aktywne, gdy value = true albo nieaktywne, gdy value = false.</param>
     private void ActivateTowers(bool value)
     {
         var aoeTowers = FindObjectsOfType<AoeTowerBehaviour>();
@@ -347,7 +507,11 @@ public class GameController : MonoBehaviour
             sTower.GetComponent<ShootingTowerBehaviour>().SetAttackPhase(value);
         }
     }
-
+	
+    /// <summary>
+    /// Metoda przypisana pod przyciski w menu budowania. Odpowiada za wywołanie metody tworzącej obiekt wieży odpowiednej w zależności o argumentu metody.
+    /// </summary>
+    /// <param name="towerType">Argument typu string określący jaka wieża ma zostać wybudowana.</param>
     public void SpawnTowerWithButton(string towerType)
     {
         switch (towerType)
@@ -373,7 +537,10 @@ public class GameController : MonoBehaviour
         }
         OpenTowerMenuUi(false);
     }
-
+	
+    /// <summary>
+    /// Metoda przypisana pod przycisk w menu budowania. Odpowiada za wywołanie metody niszczącej obiekt wieży.
+    /// </summary>
     public void DestroyTowerWithButton()
     {
         if (HasChildObjects())
@@ -385,12 +552,19 @@ public class GameController : MonoBehaviour
             OpenTowerMenuUi(false);
         }
     }
-
+	
+    /// <summary>
+    /// Metoda przypisana pod przycisk podczas fazy przygotowania. Odpowiada za rozpoczęcie fazy obrony.
+    /// </summary>
     public void StartWaveWithButton()
     {
         StartCoroutine(BeginWave());
     }
-
+	
+    /// <summary>
+    /// Metoda przypisana pod przycisk podczas fazy przygotowania. Otwiera albo zamyka menu budowania i usuwania wież.
+    /// </summary>
+    /// <param name="isVisible">Agrument typu bool określący czy menu ma być widoczne, gdy isVisible = true albo niewidoczne, gdy isVisible = false.</param>
     public void OpenTowerMenuUi(bool isVisible)
     {
         _isTowerMenuOpen = isVisible;
@@ -454,7 +628,11 @@ public class GameController : MonoBehaviour
             _uiTowerMenu.transform.GetChild(4).GetComponent<Button>().interactable = true;
         }
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za otwieranie albo zamykanie menu pauzy podczas każdej z faz.
+    /// </summary>
+    /// <param name="isVisible">Agrument typu bool określący czy menu ma być widoczne, gdy isVisible = true albo niewidoczne, gdy isVisible = false.</param>
     public void OpenPauseMenuUi(bool isVisible)
     {
         _isPauseMenuOpen = isVisible;
@@ -475,12 +653,20 @@ public class GameController : MonoBehaviour
             _uiPauseMenu.transform.GetChild(0).GetComponent<Button>().interactable = false;
         }
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za zaktualizowanie informacji na ekranie odpowiadającej liczbie amunicji w broni i pozostałej amunicji do wykorzystania.
+    /// </summary>
+    /// <param name="currentAmmo">Argument typu int, który określa ile amunicji jest obecnie w magazyku broni.</param>
+    /// <param name="maxAmmo">Argument typu int, który określa liczbę amunicji do wykorzystania.</param>
     public void UpdateAmmoOnShooterUi(int currentAmmo, int maxAmmo)
     {
         _uiShooterPhase.transform.GetChild(0).GetComponent<Text>().text = "Amunicja: " + currentAmmo + "/" + maxAmmo;
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za przejście do menu głównego podczas trwania gry rozrywkowej.
+    /// </summary>
     public void Exit()
     {
         Application.LoadLevel("MainMenu");

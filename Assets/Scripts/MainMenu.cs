@@ -1,18 +1,53 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Klasa dziedzicząca po klasie MonoBehaviour. 
+/// Odpowiada za kontrolę całej pętli gry podczas przebywania w głównym menu.
+/// </summary>
 public class MainMenu : MonoBehaviour
 {
+    /// <summary>
+    /// Zmienna logiczna określająca czy widoczne jest menu wyboru typu informacji.
+    /// </summary>
     private bool _isInfoMenuOpen;
+    /// <summary>
+    /// Zmienna logiczna określająca czy widoczne jest menu wyboru informacji o sposobach leczenia.
+    /// </summary>
     private bool _isTowerInfoMenuOpen;
+    /// <summary>
+    /// Zmienna logiczna określająca czy widoczne jest menu wyboru informacji o chorobach nowotworowych.
+    /// </summary>
     private bool _isEnemyInfoMenuOpen;
+    /// <summary>
+    /// Zmienna logiczna określająca czy widoczne jest widok przedstawiania wybranej informacji.
+    /// </summary>
     private bool _isTextMenuOpen;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt zawierący menu główne.
+    /// </summary>
     private GameObject _mainMenuUi;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt zawierący menu wyboru typu informacji.
+    /// </summary>
     private GameObject _infoMenuUi;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt zawierący menu wyboru informacji o sposobach leczenia.
+    /// </summary>
     private GameObject _towerInfoMenuUi;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt zawierący menu wyboru informacji o chorobach nowotworowych.
+    /// </summary>
     private GameObject _enemyInfoMenuUi;
+    /// <summary>
+    /// Zmienna przechowująca referencję na obiekt zawierący widok przedstawiania wybranej informacji.
+    /// </summary>
     private GameObject _textMenuUi;
-
+	
+    /// <summary>
+    /// Metoda wywoływana tylko raz przy pierwszej klatce w której skrypt jest aktywny.
+	/// Szuka obiektów zawierających każde z menu i widoków, a następnie przypisuje je do odpowiednich zmiennych klasy.
+    /// </summary>
 	void Start () 
     {
         _mainMenuUi = GameObject.Find("Canvas: Main Menu");
@@ -23,6 +58,10 @@ public class MainMenu : MonoBehaviour
         OpenMenu("Main");
 	}
 	
+	/// <summary>
+	/// Metoda wywoływana co klatkę, gdy skrypt jest aktywny.
+	/// Sprawdza czy naciśnięty został klawisz ESC, którego wciśnięcie zamyka kolejne menu, aż do powrotu do menu głównego.
+	/// </summary>
 	void Update () 
     {
 	    if (Input.GetButtonDown("Cancel"))
@@ -37,7 +76,12 @@ public class MainMenu : MonoBehaviour
             }
 	    }
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za otworzenie odpowiedniego menu 
+	/// z wszystkich możliwych menu dostępnych przed rozpoczęciem części rozrywkowej gry.
+    /// </summary>
+    /// <param name="menuType">Argument typu string określący, które menu ma zostać pokazane</param>
     public void OpenMenu(string menuType)
     {
         switch (menuType)
@@ -86,7 +130,12 @@ public class MainMenu : MonoBehaviour
                 break;
         }
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za wyświetlenie odpowiedniego tekstu 
+	/// i nagłówka w widoku przedstawiania informacji w zależności od wybranej informacji.
+    /// </summary>
+    /// <param name="textFileName">Argument typu string określający nazwę pliku, który zawiera tekst z informacjami.</param>
     public void OpenTextMenu(string textFileName)
     {
         _mainMenuUi.SetActive(false);
@@ -142,12 +191,18 @@ public class MainMenu : MonoBehaviour
                 break;
         }
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za rozpoczęcie części rozgrywkowej gry.
+    /// </summary>
     public void StartGame()
     {
         Application.LoadLevel("MainGame");
     }
-
+	
+    /// <summary>
+    /// Metoda odpowiedzialna za zamknięcie programu.
+    /// </summary>
     public void ExitGame()
     {
         Application.Quit();

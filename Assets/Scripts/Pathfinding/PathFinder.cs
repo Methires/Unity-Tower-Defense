@@ -3,15 +3,40 @@ using UnityEngine;
 
 namespace Assets.Scripts.Pathfinding
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PathFinder
     {
+        /// <summary>
+        /// /
+        /// </summary>
         private int _width;
+        /// <summary>
+        /// 
+        /// </summary>
         private int _height;
+        /// <summary>
+        /// 
+        /// </summary>
         private Node[,] _nodes;
+        /// <summary>
+        /// 
+        /// </summary>
         private Node _startNode;
+        /// <summary>
+        /// 
+        /// </summary>
         private Node _endNode;
+        /// <summary>
+        /// 
+        /// </summary>
         private SearchParameters _searchParameters;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchParameters"></param>
         public PathFinder(SearchParameters searchParameters)
         {
             _searchParameters = searchParameters;
@@ -21,6 +46,10 @@ namespace Assets.Scripts.Pathfinding
             _endNode = _nodes[(int)searchParameters.EndLocation.x, (int)searchParameters.EndLocation.y];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<Vector2> FindPath()
         {
             List<Vector2> path = new List<Vector2>();
@@ -40,6 +69,10 @@ namespace Assets.Scripts.Pathfinding
             return path;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="map"></param>
         private void InitializeNodes(bool[,] map)
         {
             _width = map.GetLength(0);
@@ -54,6 +87,11 @@ namespace Assets.Scripts.Pathfinding
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentNode"></param>
+        /// <returns></returns>
         private bool Search(Node currentNode)
         {
             currentNode.State = Node.NodeState.Closed;
@@ -74,6 +112,11 @@ namespace Assets.Scripts.Pathfinding
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fromNode"></param>
+        /// <returns></returns>
         private List<Node> GetAdjacentWalkableNodes(Node fromNode)
         {
             List<Node> walkableNodes = new List<Node>();
@@ -119,6 +162,11 @@ namespace Assets.Scripts.Pathfinding
             return walkableNodes;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fromLocation"></param>
+        /// <returns></returns>
         private static IEnumerable<Vector2> GetAdjacentLocations(Vector2 fromLocation)
         {
             return new Vector2[]

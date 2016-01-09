@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Klasa odpowiedzialna za zamianę ruchu myszki na obrót gracza w trakcie fazy obrony. Pochodzi z elementów wchodzących w skład silnika Unity, jednakże musiała zostać odpowiednio modyfikowana.
+/// </summary>
 [Serializable]
 public class MouseLook
 {
@@ -12,6 +15,9 @@ public class MouseLook
     public bool smooth;
     public float smoothTime = 5f;
 
+    /// <summary>
+    /// Zmienna logiczna określają czy gracz może obracać obiekt.
+    /// </summary>
     private bool m_BlockLook;
     private Quaternion m_CharacterTargetRot;
     private Quaternion m_CameraTargetRot;
@@ -21,9 +27,14 @@ public class MouseLook
         m_CharacterTargetRot = character.localRotation;
         m_CameraTargetRot = camera.localRotation;
     }
-
+    /// <summary>
+    /// Metoda zamieniająca ruch myszki na obrót obiektu gracza, aby możliwe było rozglądanie się dookoła. Zmodyfikowana metoda z silnika Unity.
+    /// </summary>
+    /// <param name="character">Pozycja obiektu gracza w przestrzeni gry.</param>
+    /// <param name="camera">Pozycja w przestrzeni gry obiektu kamery, która jest wykorzystywana w tej fazie.</param>
     public void LookRotation(Transform character, Transform camera)
     {
+        //Modyfikacja w tym miejscu.
         float yRot = Input.GetAxis("Mouse X") * XSensitivity * Convert.ToSingle(!m_BlockLook);
         float xRot = Input.GetAxis("Mouse Y") * YSensitivity * Convert.ToSingle(!m_BlockLook);
         m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
@@ -58,6 +69,9 @@ public class MouseLook
         return q;
     }
 
+    /// <summary>
+    /// Metoda typu get i set dla zmiennej określającej czy gracz może rozglądać się wokół podczas fazy obrony.
+    /// </summary>
     public bool BlockLook
     {
         set { m_BlockLook = value; }

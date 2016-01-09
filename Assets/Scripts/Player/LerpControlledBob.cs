@@ -2,6 +2,10 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Klasa pomocnicza dla klasy CurvedControllerBob. Opowiadająca za wyznaczanie offsetu potrzebnego do uzyskania bardziej realnej animacji, której celem jest imitacja ruch głowy.
+/// Pochodzi z elementów wchodzących w skład silnika Unity.
+/// </summary>
 [Serializable]
 public class LerpControlledBob
 {

@@ -1,6 +1,10 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// Klasa dziedzicz¹ca po klasie MonoBehaviour. Odpowiedzialna za obs³ugê ruchu gracza w przestrzeni gry w trakcie fazy obrony. 
+/// Pochodzi z elementów wchodz¹cych w sk³ad silnika Unity, jednak¿e musia³a zostaæ odpowiednio modyfikowana.
+/// </summary>
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(AudioSource))]
 public class FirstPersonController : MonoBehaviour
@@ -34,7 +38,13 @@ public class FirstPersonController : MonoBehaviour
     private float m_NextStep;
     private bool m_Jumping;
     private AudioSource m_AudioSource;
+    /// <summary>
+    /// Zmienna logiczna okreœlaj¹cza czy obiekt gracza mo¿e biegaæ.
+    /// </summary>
     private bool m_CanRun = true;
+    /// <summary>
+    /// Zmienna logiczna okreœlaj¹ czy gracz mo¿e poruszaæ siê obiektem.
+    /// </summary>
     private bool m_BlockMovement = false;
 
     private void Start()
@@ -50,9 +60,13 @@ public class FirstPersonController : MonoBehaviour
         m_MouseLook.Init(transform, m_Camera.transform);
     }
 
+    /// <summary>
+    /// Metoda wywo³ywana co klatkê, gdy skrypt jest aktywny. Zmodyfikowana metoda z silnika Unity.
+    /// </summary>
     private void Update()
     {
         RotateView();
+        //Modyfikacja w tym miejscu.
         if (!m_Jump && !m_BlockMovement)
         {
             m_Jump = Input.GetButtonDown("Jump");
@@ -168,11 +182,16 @@ public class FirstPersonController : MonoBehaviour
         m_Camera.transform.localPosition = newCameraPosition;
     }
 
+    /// <summary>
+    /// Metoda zamieniaj¹ca informacjê wprowadzane przez gracza na ruch obiektu gracza w grze. Zmodyfikowana metoda z silnika Unity.
+    /// </summary>
+    /// <param name="speed">Zwraca wartoœæ bêd¹c¹ szybkoœci¹ z jak¹ ma porszucaæ siê obiekt gracza.</param>
     private void GetInput(out float speed)
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         m_IsWalking = !Input.GetButton("Sprint");
+        //Modyfikacja w tym miejscu.
         speed = m_BlockMovement ? 0.0f : m_IsWalking ? m_WalkSpeed : m_CanRun ? m_RunSpeed : m_WalkSpeed;
         m_Input = new Vector2(horizontal, vertical);
         if (m_Input.sqrMagnitude > 1)
@@ -200,13 +219,17 @@ public class FirstPersonController : MonoBehaviour
         }
         body.AddForceAtPosition(m_CharacterController.velocity * 0.1f, hit.point, ForceMode.Impulse);
     }
-
+    /// <summary>
+    /// Metoda typu get i set dla zmiennej odpowiedzialnej za okreœlanie czy gracz mo¿e korzystaæ z biegu podczas fazy obrony.
+    /// </summary>
     public bool CanRun
     {
         get { return m_CanRun; }
         set { m_CanRun = value; }
     }
-
+    /// <summary>
+    /// Metoda typu get i set dla zmiennej okreœlaj¹cej czy gracz mo¿e poruszaæ siê podczas fazy obrony.
+    /// </summary>
     public bool BlockMovement
     {
         get { return m_BlockMovement; }
